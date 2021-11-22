@@ -1,0 +1,37 @@
+{
+  "validation": {
+    "form": {
+      "required": "Field is required",
+      "min": "Minimum length error",
+      "max": "Max length  error",
+      "email": "Please provide valid email"
+    }
+  },
+  "fields": {
+    "name": "Name",
+    "email": "Email",
+    "details": "Details",
+    "password": "Password",
+    "firstName": "First Name",
+    "lastName": "Last Name"
+  },
+  "api": {
+    "general-error": "Unknown error. Please contact administrator.",
+    "error-msg-title": "Unknown error",
+    "update-status-msg-title": "Update status",
+    "error-msg-content": "Unknown error. Please contact administrator."
+  },
+  "listing": {
+    "title": "Title",
+    "area": "Area (m2)",
+    "price": "Price (EUR)",
+    "upload": {
+      "clickToUpload": "Click to upload main picture",
+      "dropFilesToUpload": "Drop your files here or click to upload",
+      "failed": "Upload failed"
+    },
+    "messages": {
+      "created": "Listing successfully created"
+    }
+  }
+}

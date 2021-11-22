@@ -1,0 +1,19 @@
+{
+  "name": "tools",
+  "version": "1.0.0",
+  "description": "Toolset",
+  "main": "src/address-converter.ts",
+  "license": "MIT",
+  "private": "true",
+  "dependencies": {
+    "@types/node": "^16.9.3",
+    "csv-parse": "^4.16.3",
+    "csv-writer": "^1.6.0",
+    "ts-node": "^10.2.1",
+    "ts-node-dev": "^1.1.8"
+  },
+  "scripts": {
+    "start": "./node_modules/.bin/ts-node ./src/address-converter.ts",
+    "dev": "./node_modules/.bin/ts-node-dev --respawn ./src/address-converter.ts"
+  }
+}

@@ -1,0 +1,236 @@
+// Import Bulma's core
+@import "../../node_modules/bulma/sass/utilities/_all";
+
+// my app settings
+$footer-padding: 1.5rem 1.5rem 3rem;
+
+// Set your colors
+$primary: #8c67ef;
+$primary-light: findLightColor($primary);
+$primary-dark: findDarkColor($primary);
+$primary-invert: findColorInvert($primary);
+
+//// Lists and maps
+//$custom-colors: null !default;
+//$custom-shades: null !default;
+
+$footer-padding: 1.5rem 1.5rem 3rem;
+
+.cs-nav-bg {
+  background: rgb(0,26,36);
+  background: linear-gradient(90deg, rgba(0,26,36,0.5186449579831933) 16%, rgba(144,167,172,0.6783088235294117) 100%);
+}
+//
+//MIT License
+//
+//Copyright (c) 2020 Aldi Duzha (aldi)
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+.sub-section {
+	margin-bottom: 60px;
+}
+.rb-card {
+	border: none;
+	border-radius: 4px;
+	box-shadow: 5px 5px 16px 0 rgba(0, 0, 0, 0.13);
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
+	position: relative;
+	overflow: hidden;
+}
+.rb-card a {
+	color: #515f6a;
+}
+.rb-card:hover {
+	transform: scale(1.015);
+}
+.m-l-5 {
+	margin-left: 5px !important;
+}
+.p-t-30 {
+	padding-top: 30px !important;
+}
+.p-b-30 {
+	padding-bottom: 30px !important;
+}
+.m-t-10 {
+	margin-top: 10px !important;
+}
+.m-t-30 {
+	margin-top: 30px !important;
+}
+.m-t-50 {
+	margin-top: 50px !important;
+}
+.m-t-60 {
+	margin-top: 60px !important;
+}
+.b-t {
+	border-top: 1px solid #e2e8ef;
+}
+.ellipsis {
+	display: block;
+	display: -webkit-box;
+	margin: 0 auto;
+	line-height: 1.4;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.is-ellipsis-1 {
+	-webkit-line-clamp: 1;
+}
+.is-ellipsis-2 {
+	-webkit-line-clamp: 2;
+}
+h1,
+h2,
+h3,
+h4 {
+	font-family: Montserrat, sans-serif;
+	font-weight: 600;
+}
+.title {
+	font-weight: 600;
+}
+.field.has-shadow-field {
+	-webkit-box-shadow: 0 5px 30px hsla(224, 8%, 64%, 0.25) !important;
+	box-shadow: 0 5px 30px hsla(224, 8%, 64%, 0.25) !important;
+}
+.subtitle {
+	font-family: BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+		Fira Sans, Droid Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
+	font-weight: 500;
+}
+.hero.is-light .subtitle,
+.subtitle {
+	color: #99a6b3;
+}
+.input {
+	box-shadow: none;
+	-webkit-box-shadow: none;
+}
+.input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 30px #fff inset;
+}
+.input:invalid {
+	outline: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+.input:active,
+.input:focus {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+.button {
+	-webkit-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+	font-family: Montserrat, sans-serif;
+	font-weight: 500;
+}
+.button.is-shadowy {
+	box-shadow: 0 5px 30px hsla(224, 8%, 64%, 0.25);
+	-webkit-box-shadow: 0 5px 30px hsla(224, 8%, 64%, 0.25);
+	-moz-box-shadow: 0 5px 30px hsla(224, 8%, 64%, 0.25);
+}
+.button.is-shadowy:hover {
+	-webkit-box-shadow: 0 16px 43px 2px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 16px 43px 2px rgba(0, 0, 0, 0.2);
+}
+a {
+	-webkit-transition: color 0.3s ease-out;
+	transition: color 0.3s ease-out;
+}
+.navbar.is-transparent {
+	background-color: transparent;
+	background-image: none;
+}
+
+.box.search-box {
+  padding: 1rem;
+  background: linear-gradient(lighten($primary-dark, 55%), #ffffff);
+  margin: 0;
+}
+
+.filter-radio-button-label> label:not(.is-selected)  {
+   background: linear-gradient(lighten($primary-dark, 55%), #ffffff);
+}
+
+.autocomplete-search-item {
+  color: $primary-dark;
+  padding-left: 2.25rem;
+  overflow: hidden;
+}
+
+$colors: mergeColorMaps(
+    (
+      "white": (
+        $white,
+        $black,
+      ),
+      "black": (
+        $black,
+        $white,
+      ),
+      "light": (
+        $light,
+        $light-invert,
+      ),
+      "dark": (
+        $dark,
+        $dark-invert,
+      ),
+      "primary": (
+        $primary,
+        $primary-invert,
+        $primary-light,
+        $primary-dark,
+      ),
+      "link": (
+        $link,
+        $link-invert,
+        $link-light,
+        $link-dark,
+      ),
+      "info": (
+        $info,
+        $info-invert,
+        $info-light,
+        $info-dark,
+      ),
+      "success": (
+        $success,
+        $success-invert,
+        $success-light,
+        $success-dark,
+      ),
+      "warning": (
+        $warning,
+        $warning-invert,
+        $warning-light,
+        $warning-dark,
+      ),
+      "danger": (
+        $danger,
+        $danger-invert,
+        $danger-light,
+        $danger-dark,
+      ),
+    ),
+    $custom-colors
+);
+
+// Links
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
