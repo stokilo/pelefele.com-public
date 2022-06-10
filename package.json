@@ -16,6 +16,16 @@
     "postdeploy-prod": "cd frontend && yarn deploy-prod",
     "undeploy-prod": "sst remove --stage prod"
   },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "extends": [
+      "eslint:recommended",
+      "typescript"
+    ]
+  },
   "devDependencies": {
     "@babel/core": "^7.15.0",
     "@babel/preset-env": "^7.15.0",
@@ -26,7 +36,12 @@
     "@types/node": "^16.7.10",
     "@types/sharp": "^0.29.2",
     "aws-cdk-lib": "2.24.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.15.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-serverless-stack": "^0.69.7",
+    "eslint-config-typescript": "^3.0.0",
+    "prettier": "2.6.2",
+    "tslint-config-prettier": "^1.18.0",
     "jest": "^27.1.0",
     "jest-runner-tsc": "^1.6.0",
     "sharp": "^0.29.2",

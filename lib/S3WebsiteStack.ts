@@ -8,21 +8,42 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { APP_BUCKET_NAMES } from './BucketConfig'
 import { AppStackProps } from './AppStackProps'
 import { constructId } from './index'
-import { BucketDeployment, Source, StorageClass } from 'aws-cdk-lib/aws-s3-deployment'
+import {
+  BucketDeployment,
+  Source,
+  StorageClass,
+} from 'aws-cdk-lib/aws-s3-deployment'
 
 export default class S3WebsiteStack extends Stack {
-  constructor (scope: App, id: string, props: AppStackProps) {
+  constructor(scope: App, id: string, props: AppStackProps) {
     super(scope, id, props)
 
     if (props.isDev) {
-      const assetsBucket = this.staticAssetBucket(APP_BUCKET_NAMES.DEV_ASSETS_BUCKET, props)
+      const assetsBucket = this.staticAssetBucket(
+        APP_BUCKET_NAMES.DEV_ASSETS_BUCKET,
+        props
+      )
       this.uploadBucket(APP_BUCKET_NAMES.DEV_UPLOAD_BUCKET, props, assetsBucket)
     } else if (props.isProd) {
-      const assetsBucket = this.staticAssetBucket(APP_BUCKET_NAMES.PROD_ASSETS_BUCKET, props)
-      this.uploadBucket(APP_BUCKET_NAMES.PROD_UPLOAD_BUCKET, props, assetsBucket)
+      const assetsBucket = this.staticAssetBucket(
+        APP_BUCKET_NAMES.PROD_ASSETS_BUCKET,
+        props
+      )
+      this.uploadBucket(
+        APP_BUCKET_NAMES.PROD_UPLOAD_BUCKET,
+        props,
+        assetsBucket
+      )
     } else if (props.isLocal) {
-      const assetsBucket = this.staticAssetBucket(APP_BUCKET_NAMES.LOCAL_ASSETS_BUCKET, props)
-      this.uploadBucket(APP_BUCKET_NAMES.LOCAL_UPLOAD_BUCKET, props, assetsBucket)
+      const assetsBucket = this.staticAssetBucket(
+        APP_BUCKET_NAMES.LOCAL_ASSETS_BUCKET,
+        props
+      )
+      this.uploadBucket(
+        APP_BUCKET_NAMES.LOCAL_UPLOAD_BUCKET,
+        props,
+        assetsBucket
+      )
     }
   }
 
@@ -30,7 +51,10 @@ export default class S3WebsiteStack extends Stack {
    * S3 bucket for storing images has DNS on Cloudflare like: prod-assets.pelefele.com or dev-assets.pelefele.com
    * Bucket created here is for storing app images and serve them via cloudflare proxy only.
    */
-  private staticAssetBucket (bucketName: APP_BUCKET_NAMES, props: AppStackProps) {
+  private staticAssetBucket(
+    bucketName: APP_BUCKET_NAMES,
+    props: AppStackProps
+  ) {
     const sBucket = new SBucket(this, constructId('s3-assets-bucket', props), {
       s3Bucket: {
         bucketName,
@@ -38,26 +62,36 @@ export default class S3WebsiteStack extends Stack {
         websiteIndexDocument: 'index.html',
         websiteErrorDocument: 'index.html',
         removalPolicy: RemovalPolicy.DESTROY,
-        autoDeleteObjects: true
-      }
+        autoDeleteObjects: true,
+      },
     })
-    sBucket.s3Bucket.addToResourcePolicy(this.getCloudflareAccessOnlyPolicy(bucketName, props))
+    sBucket.s3Bucket.addToResourcePolicy(
+      this.getCloudflareAccessOnlyPolicy(bucketName, props)
+    )
 
-    new BucketDeployment(this, constructId('s3-assets-bucket-deployment', props), {
-      sources: [Source.asset('./lib/data/assets/')],
-      destinationBucket: sBucket.s3Bucket,
-      retainOnDelete: false,
-      prune: true,
-      storageClass: StorageClass.STANDARD,
-      memoryLimit: 3008
-    })
+    new BucketDeployment(
+      this,
+      constructId('s3-assets-bucket-deployment', props),
+      {
+        sources: [Source.asset('./lib/data/assets/')],
+        destinationBucket: sBucket.s3Bucket,
+        retainOnDelete: false,
+        prune: true,
+        storageClass: StorageClass.STANDARD,
+        memoryLimit: 3008,
+      }
+    )
     return sBucket
   }
 
   /**
    * S3 bucket for uploading images.
    */
-  private uploadBucket (bucketName: APP_BUCKET_NAMES, props: AppStackProps, assetsBucket: SBucket) {
+  private uploadBucket(
+    bucketName: APP_BUCKET_NAMES,
+    props: AppStackProps,
+    assetsBucket: SBucket
+  ) {
     const sBucket = new SBucket(this, constructId('s3-upload-bucket', props), {
       s3Bucket: {
         bucketName,
@@ -66,39 +100,44 @@ export default class S3WebsiteStack extends Stack {
         autoDeleteObjects: true,
         cors: [
           {
-            allowedMethods: [
-              HttpMethods.POST,
-              HttpMethods.PUT
-            ],
+            allowedMethods: [HttpMethods.POST, HttpMethods.PUT],
             allowedOrigins: ['*'],
-            allowedHeaders: ['*']
-          }
-        ]
-      }
-    }
-    )
+            allowedHeaders: ['*'],
+          },
+        ],
+      },
+    })
 
     props.bucketConfig.imgUploadBucket = sBucket
 
-    sBucket.addNotifications(this, [{
-      handler: 'src/rest/events/s3upload.handler',
-      bundle: {
-        externalModules: ['sharp']
+    sBucket.addNotifications(this, [
+      {
+        handler: 'src/rest/events/s3upload.handler',
+        bundle: {
+          externalModules: ['sharp'],
+        },
+        layers: [
+          new lambda.LayerVersion(
+            this,
+            constructId('node-module-sharp-lambda-layer', props),
+            {
+              code: lambda.Code.fromAsset('layers/sharp'),
+            }
+          ),
+        ],
+        permissions: [sBucket, assetsBucket],
+        memorySize: 1024,
       },
-      layers: [
-        new lambda.LayerVersion(this, constructId('node-module-sharp-lambda-layer', props), {
-          code: lambda.Code.fromAsset('layers/sharp')
-        })
-      ],
-      permissions: [sBucket, assetsBucket],
-      memorySize: 1024
-    }])
+    ])
   }
 
   /**
    * Policy allows only developer and cloudflare IP to access the website
    */
-  getCloudflareAccessOnlyPolicy (bucketName: string, props: AppStackProps): PolicyStatement {
+  getCloudflareAccessOnlyPolicy(
+    bucketName: string,
+    props: AppStackProps
+  ): PolicyStatement {
     return new PolicyStatement({
       sid: constructId('cloudflare-access-bucket-policy', props),
       actions: ['s3:GetObject'],
@@ -131,10 +170,10 @@ export default class S3WebsiteStack extends Stack {
             '172.64.0.0/13',
             '131.0.72.0/22',
             '104.16.0.0/13',
-            '104.24.0.0/14'
-          ]
-        }
-      }
+            '104.24.0.0/14',
+          ],
+        },
+      },
     })
   }
 }

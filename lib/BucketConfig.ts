@@ -13,33 +13,44 @@ export enum APP_BUCKET_NAMES {
 
   LOCAL_APP_CONFIG = 'local-app-config.pelefele.com',
   LOCAL_ASSETS_BUCKET = 'local-assets.pelefele.com',
-  LOCAL_UPLOAD_BUCKET = 'local-upload.pelefele.com'
+  LOCAL_UPLOAD_BUCKET = 'local-upload.pelefele.com',
 }
 
-
 export default class BucketConfig {
-    public applicationConfigBucketName: string
-    public applicationConfigBucket: Bucket
-    public imgUploadBucket: Bucket
-    private s3Client: S3Client
+  public applicationConfigBucketName: string
+  public applicationConfigBucket: Bucket
+  public imgUploadBucket: Bucket
+  private s3Client: S3Client
 
-    public async init (props: AppStackProps) {
-      this.s3Client = await new S3Client({ region: props.region })
+  public async init(props: AppStackProps) {
+    this.s3Client = await new S3Client({ region: props.region })
+  }
+
+  getS3UploadBucketName(stage: string) {
+    if (stage === 'dev') {
+      return APP_BUCKET_NAMES.DEV_UPLOAD_BUCKET
+    }
+    if (stage === 'prod') {
+      return APP_BUCKET_NAMES.PROD_UPLOAD_BUCKET
+    }
+    if (stage === 'local') {
+      return APP_BUCKET_NAMES.LOCAL_UPLOAD_BUCKET
     }
 
-    getS3UploadBucketName (stage: string) {
-      if (stage === 'dev') { return APP_BUCKET_NAMES.DEV_UPLOAD_BUCKET }
-      if (stage === 'prod') { return APP_BUCKET_NAMES.PROD_UPLOAD_BUCKET }
-      if (stage === 'local') { return APP_BUCKET_NAMES.LOCAL_UPLOAD_BUCKET }
+    return ''
+  }
 
-      return ''
+  getS3ImgBucketName(stage: string) {
+    if (stage === 'dev') {
+      return APP_BUCKET_NAMES.DEV_ASSETS_BUCKET
+    }
+    if (stage === 'prod') {
+      return APP_BUCKET_NAMES.PROD_ASSETS_BUCKET
+    }
+    if (stage === 'local') {
+      return APP_BUCKET_NAMES.LOCAL_ASSETS_BUCKET
     }
 
-    getS3ImgBucketName (stage: string) {
-      if (stage === 'dev') { return APP_BUCKET_NAMES.DEV_ASSETS_BUCKET }
-      if (stage === 'prod') { return APP_BUCKET_NAMES.PROD_ASSETS_BUCKET }
-      if (stage === 'local') { return APP_BUCKET_NAMES.LOCAL_ASSETS_BUCKET }
-
-      return ''
-    }
+    return ''
+  }
 }

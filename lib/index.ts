@@ -17,21 +17,39 @@ import RestApi from './RestApi'
 import AllStagesSecretStack from './AllStagesSecretStack'
 import AppOutputStack from './AppOutputStack'
 
-export function constructName (constructNamePrefix: string, stackProps: AppStackProps) {
-  const formatted = constructNamePrefix.split('-')
-    .map(elem => elem.charAt(0).toUpperCase() + elem.slice(1).toLocaleLowerCase()).join('')
-  const appName = stackProps.appName.charAt(0).toUpperCase() + stackProps.appName.slice(1).toLocaleLowerCase()
-  const stage = stackProps.stage.charAt(0).toUpperCase() + stackProps.stage.slice(1).toLocaleLowerCase()
+export function constructName(
+  constructNamePrefix: string,
+  stackProps: AppStackProps
+) {
+  const formatted = constructNamePrefix
+    .split('-')
+    .map(
+      (elem) => elem.charAt(0).toUpperCase() + elem.slice(1).toLocaleLowerCase()
+    )
+    .join('')
+  const appName =
+    stackProps.appName.charAt(0).toUpperCase() +
+    stackProps.appName.slice(1).toLocaleLowerCase()
+  const stage =
+    stackProps.stage.charAt(0).toUpperCase() +
+    stackProps.stage.slice(1).toLocaleLowerCase()
   return `${formatted}-${appName}-${stage}`
 }
 
-export function constructId (constructIdPrefix: string, stackProps: AppStackProps) {
-  const formatted = constructIdPrefix.split('-')
-    .map(elem => elem.charAt(0).toUpperCase() + elem.slice(1).toLocaleLowerCase()).join('')
+export function constructId(
+  constructIdPrefix: string,
+  stackProps: AppStackProps
+) {
+  const formatted = constructIdPrefix
+    .split('-')
+    .map(
+      (elem) => elem.charAt(0).toUpperCase() + elem.slice(1).toLocaleLowerCase()
+    )
+    .join('')
   return constructName(constructIdPrefix, stackProps)
 }
 
-export default async function main (app: sst.App): Promise<void> {
+export default async function main(app: sst.App): Promise<void> {
   const appName = 'pelefele'
   const domainStagePrefix = `${app.stage}.`
   const hostedZoneName = 'awss.ws'
@@ -41,11 +59,16 @@ export default async function main (app: sst.App): Promise<void> {
   const restApiName = 'api.pelefele.com'
 
   const cognitoDomainPrefix = process.env.COGNITO_DOMAIN_PREFIX as string
-  const cognitoCallbackUrlLocalMode = process.env.COGNITO_CALLBACK_URL_LOCAL_MODE as string
+  const cognitoCallbackUrlLocalMode = process.env
+    .COGNITO_CALLBACK_URL_LOCAL_MODE as string
   const cognitoCallbackUrl = process.env.COGNITO_CALLBACK_URL as string
   const cognitoLogoutUrl = process.env.COGNITO_LOGOUT_URL as string
-  const cognitoRedirectSignInUrl = process.env.IS_LOCAL ? cognitoCallbackUrlLocalMode : cognitoCallbackUrl
-  const cognitoRedirectSignOutUrl = process.env.IS_LOCAL ? cognitoCallbackUrlLocalMode : cognitoLogoutUrl
+  const cognitoRedirectSignInUrl = process.env.IS_LOCAL
+    ? cognitoCallbackUrlLocalMode
+    : cognitoCallbackUrl
+  const cognitoRedirectSignOutUrl = process.env.IS_LOCAL
+    ? cognitoCallbackUrlLocalMode
+    : cognitoLogoutUrl
 
   const esEndpointCname = `${domainStagePrefix}es.awss.ws`
   const appOutputParameterName = `/app-output/${appName}/${app.stage}`
@@ -77,14 +100,13 @@ export default async function main (app: sst.App): Promise<void> {
     isLocal: app.stage === 'local',
     domainStagePrefix: `${app.stage}.`,
 
-    bucketConfig: new BucketConfig()
-
+    bucketConfig: new BucketConfig(),
   }
   await props.bucketConfig.init(props)
 
   app.setDefaultFunctionProps({
     runtime: 'nodejs14.x',
-    logRetention: RetentionDays.ONE_DAY
+    logRetention: RetentionDays.ONE_DAY,
   })
 
   app.setDefaultFunctionProps({
@@ -95,11 +117,15 @@ export default async function main (app: sst.App): Promise<void> {
       ES_DOMAIN_HTTP: `http://${props.domainStagePrefix}es.awss.ws`,
       VPN_DOMAIN: `*.${props.domainStagePrefix}vpn.awss.ws`,
       S3_UPLOAD_BUCKET: props.bucketConfig.getS3UploadBucketName(app.stage),
-      S3_IMG_BUCKET: props.bucketConfig.getS3ImgBucketName(app.stage)
-    }
+      S3_IMG_BUCKET: props.bucketConfig.getS3ImgBucketName(app.stage),
+    },
   })
 
-  const allStagesSecretStack = new AllStagesSecretStack(app, 'all-stages-secret', props)
+  const allStagesSecretStack = new AllStagesSecretStack(
+    app,
+    'all-stages-secret',
+    props
+  )
   const vpcStack = new VpcStack(app, 'vpc', props)
   const s3AppConfigStack = new S3AppConfigStack(app, 's3-app-config', props)
   const elasticStack = new ElasticStack(app, 'es', props)
@@ -109,9 +135,21 @@ export default async function main (app: sst.App): Promise<void> {
   const restApi = new RestApi(app, 'rest-api', props)
   const vpnStack = new VpnStack(app, 'vpn', props)
   const appOutputStack = new AppOutputStack(app, 'app-output-stack', props)
-  const postDeploymentUpdateStack = new PostDeploymentUpdateStack(app, 'post-deploy-update', props)
-  const postDeploymentMigrationStack = new PostDeploymentMigrationStack(app, 'post-deploy-migrate', props)
-  const postDeploymentTrigger = new PostDeploymentTrigger(app, 'post-deploy-trigger', props)
+  const postDeploymentUpdateStack = new PostDeploymentUpdateStack(
+    app,
+    'post-deploy-update',
+    props
+  )
+  const postDeploymentMigrationStack = new PostDeploymentMigrationStack(
+    app,
+    'post-deploy-migrate',
+    props
+  )
+  const postDeploymentTrigger = new PostDeploymentTrigger(
+    app,
+    'post-deploy-trigger',
+    props
+  )
 
   restApi.addDependency(allStagesSecretStack)
   elasticStack.addDependency(allStagesSecretStack)

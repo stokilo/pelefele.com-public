@@ -9,14 +9,14 @@ import { AppStackProps } from './AppStackProps'
 import { constructId } from './index'
 
 export default class ElasticStack extends Stack {
-  constructor (scope: App, id: string, props: AppStackProps) {
+  constructor(scope: App, id: string, props: AppStackProps) {
     super(scope, id, props)
 
     const domainAccessPolicy = new iam.PolicyStatement({
       actions: ['*'],
       effect: iam.Effect.ALLOW,
       resources: ['*'],
-      principals: [new iam.ServicePrincipal('lambda.amazonaws.com')]
+      principals: [new iam.ServicePrincipal('lambda.amazonaws.com')],
     })
 
     const domainProps: es.DomainProps = {
@@ -27,34 +27,49 @@ export default class ElasticStack extends Stack {
       vpcSubnets: [
         {
           subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
-          availabilityZones: [props.vpc!.availabilityZones[0], props.vpc!.availabilityZones[1]]
-        }
+          availabilityZones: [
+            props.vpc!.availabilityZones[0],
+            props.vpc!.availabilityZones[1],
+          ],
+        },
       ],
       zoneAwareness: {
         enabled: true,
-        availabilityZoneCount: 2
+        availabilityZoneCount: 2,
       },
       capacity: {
         masterNodes: 3,
         masterNodeInstanceType: 't3.small.elasticsearch',
         dataNodes: 2,
-        dataNodeInstanceType: 't3.small.elasticsearch'
+        dataNodeInstanceType: 't3.small.elasticsearch',
       },
-      accessPolicies: [domainAccessPolicy]
+      accessPolicies: [domainAccessPolicy],
     }
-    props.esDomain = new es.Domain(this, constructId('es-domain', props), domainProps)
+    props.esDomain = new es.Domain(
+      this,
+      constructId('es-domain', props),
+      domainProps
+    )
 
-    const hostedZoneId = props.allStagesSecrets!.secretValueFromJson(`${props.stageUpperCase}_HOSTED_ZONE_ID`).toString()
-    const awssWsHostedZone = route53.HostedZone.fromHostedZoneAttributes(this, constructId('awsws-hosted-zone', props), {
-      zoneName: props.hostedZoneName,
-      hostedZoneId
-    })
+    const hostedZoneId = props
+      .allStagesSecrets!.secretValueFromJson(
+        `${props.stageUpperCase}_HOSTED_ZONE_ID`
+      )
+      .toString()
+    const awssWsHostedZone = route53.HostedZone.fromHostedZoneAttributes(
+      this,
+      constructId('awsws-hosted-zone', props),
+      {
+        zoneName: props.hostedZoneName,
+        hostedZoneId,
+      }
+    )
 
     new route53.CnameRecord(this, props.esEndpointCname, {
       recordName: `${props.domainStagePrefix}es`,
       domainName: props.esDomain.domainEndpoint,
       ttl: Duration.seconds(10),
-      zone: awssWsHostedZone
+      zone: awssWsHostedZone,
     })
 
     // this.exportValue(props.esDomain, {name: 'esDomain'})

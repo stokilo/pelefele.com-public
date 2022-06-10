@@ -26,7 +26,6 @@ Go to Route53 hosted zone for domain and add CNAME like that
 
 Open aws.ovpn with amazon VPN client or OpenVpn client.
 
-
 Exclude
 
 ```

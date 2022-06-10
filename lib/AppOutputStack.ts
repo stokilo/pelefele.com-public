@@ -6,7 +6,7 @@ import { AppStackProps } from './AppStackProps'
 import { constructId } from './index'
 
 export default class AppOutputStack extends sst.Stack {
-  constructor (scope: sst.App, id: string, props: AppStackProps) {
+  constructor(scope: sst.App, id: string, props: AppStackProps) {
     super(scope, id, props)
 
     const ssmValue = {
@@ -22,14 +22,18 @@ export default class AppOutputStack extends sst.Stack {
       cognitoRedirectSignOutUrl: props.cognitoRedirectSignOutUrl,
       cognitoIdentityPoolId: props.cognitoCfnIdentityPool!.ref,
       esDomainEndpoint: props.esDomain!.domainEndpoint,
-      esEndpointCname: props.esEndpointCname
+      esEndpointCname: props.esEndpointCname,
     }
 
-    props.appOutputParameter = new SSM.StringParameter(this, constructId('app-output-parameter', props), {
-      parameterName: props.appOutputParameterName,
-      description: `Parameter store for application: ${props.appName} and stage: ${props.stage}`,
-      stringValue: JSON.stringify(ssmValue)
-    })
+    props.appOutputParameter = new SSM.StringParameter(
+      this,
+      constructId('app-output-parameter', props),
+      {
+        parameterName: props.appOutputParameterName,
+        description: `Parameter store for application: ${props.appName} and stage: ${props.stage}`,
+        stringValue: JSON.stringify(ssmValue),
+      }
+    )
 
     const arr = [props.dynamoDbListingStreamLambda!, props.restApi!]
     arr.forEach((construct) => {
@@ -37,10 +41,8 @@ export default class AppOutputStack extends sst.Stack {
         new iam.PolicyStatement({
           actions: ['ssm:GetParameter'],
           effect: iam.Effect.ALLOW,
-          resources: [
-            props.appOutputParameter?.parameterArn!
-          ]
-        })
+          resources: [props.appOutputParameter?.parameterArn!],
+        }),
       ])
     })
     this.addOutputs(ssmValue)

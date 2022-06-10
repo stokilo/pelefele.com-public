@@ -6,29 +6,37 @@ import { AppStackProps } from './AppStackProps'
 import { constructId, constructName } from './index'
 
 export default class VpnStack extends Stack {
-  constructor (scope: App, id: string, props: AppStackProps) {
+  constructor(scope: App, id: string, props: AppStackProps) {
     super(scope, id, props)
 
     const clientCertToken = ssm.StringParameter.valueForStringParameter(
-      this, 'client-cert-parameter')
+      this,
+      'client-cert-parameter'
+    )
     const serverCertToken = ssm.StringParameter.valueForStringParameter(
-      this, 'server-cert-parameter')
+      this,
+      'server-cert-parameter'
+    )
 
-    props.vpnEndpoint = new ec2.ClientVpnEndpoint(this, constructId('vpn-endpoint', props), {
-      cidr: '10.17.0.0/22',
-      clientCertificateArn: clientCertToken,
-      serverCertificateArn: serverCertToken,
-      vpc: props.vpc!,
-      splitTunnel: true,
-      logging: false,
-      selfServicePortal: false,
-      dnsServers: ['10.17.0.2'],
-      securityGroups: [props.sgForIsolatedSubnet!],
-      vpcSubnets: {
-        subnetGroupName: constructName('subnet-isolated', props),
-        availabilityZones: [props.vpc!.availabilityZones[0]]
+    props.vpnEndpoint = new ec2.ClientVpnEndpoint(
+      this,
+      constructId('vpn-endpoint', props),
+      {
+        cidr: '10.17.0.0/22',
+        clientCertificateArn: clientCertToken,
+        serverCertificateArn: serverCertToken,
+        vpc: props.vpc!,
+        splitTunnel: true,
+        logging: false,
+        selfServicePortal: false,
+        dnsServers: ['10.17.0.2'],
+        securityGroups: [props.sgForIsolatedSubnet!],
+        vpcSubnets: {
+          subnetGroupName: constructName('subnet-isolated', props),
+          availabilityZones: [props.vpc!.availabilityZones[0]],
+        },
       }
-    })
+    )
 
     // const bastionHost = new ec2.BastionHostLinux(this, 'BastionHostLinux', {
     //   vpc: props.vpc,

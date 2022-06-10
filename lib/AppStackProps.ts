@@ -1,5 +1,11 @@
 import { UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito'
-import { Function, ApiGatewayV1Api, Queue, StackProps, Table } from '@serverless-stack/resources'
+import {
+  Function,
+  ApiGatewayV1Api,
+  Queue,
+  StackProps,
+  Table,
+} from '@serverless-stack/resources'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as es from 'aws-cdk-lib/aws-elasticsearch'
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
@@ -9,7 +15,6 @@ import * as SM from 'aws-cdk-lib/aws-secretsmanager'
 import BucketConfig from '../lib/BucketConfig'
 
 export declare type AppStackProps = StackProps & {
-
   appName: string
 
   allStagesSecretName: string
@@ -52,7 +57,7 @@ export declare type AppStackProps = StackProps & {
   cognitoRedirectSignOutUrl: string
   cognitoUserPool?: UserPool
   cognitoUserPoolClient?: UserPoolClient
-  cognitoCfnIdentityPool?: cognito.CfnIdentityPool;
+  cognitoCfnIdentityPool?: cognito.CfnIdentityPool
 
   postDeploymentMigrationStateMachine?: sfn.StateMachine
   postDeploymentUpdateStackStateMachine?: sfn.StateMachine
