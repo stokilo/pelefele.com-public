@@ -1,14 +1,14 @@
 /* eslint-disable no-new */
 import { App, Bucket as SBucket, Stack } from '@serverless-stack/resources'
-import { HttpMethods } from '@aws-cdk/aws-s3'
-import { RemovalPolicy } from '@aws-cdk/core'
-import { Effect, PolicyStatement } from '@aws-cdk/aws-iam'
-import { AnyPrincipal } from '@aws-cdk/aws-iam/lib/principals'
-import * as lambda from '@aws-cdk/aws-lambda'
+import { HttpMethods } from 'aws-cdk-lib/aws-s3'
+import { RemovalPolicy } from 'aws-cdk-lib'
+import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam'
+import { AnyPrincipal } from 'aws-cdk-lib/aws-iam/lib/principals'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { APP_BUCKET_NAMES } from './BucketConfig'
 import { AppStackProps } from './AppStackProps'
 import { constructId } from './index'
-import { BucketDeployment, Source, StorageClass } from '@aws-cdk/aws-s3-deployment'
+import { BucketDeployment, Source, StorageClass } from 'aws-cdk-lib/aws-s3-deployment'
 
 export default class S3WebsiteStack extends Stack {
   constructor (scope: App, id: string, props: AppStackProps) {

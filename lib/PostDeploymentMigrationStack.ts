@@ -1,10 +1,10 @@
 import { App, Function, Stack } from '@serverless-stack/resources'
-import * as cdk from '@aws-cdk/core'
-import { Duration, RemovalPolicy } from '@aws-cdk/core'
-import * as sfn from '@aws-cdk/aws-stepfunctions'
-import * as tasks from '@aws-cdk/aws-stepfunctions-tasks'
-import { SubnetType } from '@aws-cdk/aws-ec2'
-import iam, { Effect } from '@aws-cdk/aws-iam'
+import * as cdk from 'aws-cdk-lib'
+import { Duration, RemovalPolicy } from 'aws-cdk-lib'
+import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
+import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
+import { SubnetType } from 'aws-cdk-lib/aws-ec2'
+import iam, { Effect } from 'aws-cdk-lib/aws-iam'
 import {
   StepFunctionMigrationError,
   StepFunctionMigrationOkAllDone,

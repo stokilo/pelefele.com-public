@@ -1,7 +1,7 @@
 /* eslint-disable no-new */
 import { App, Stack } from '@serverless-stack/resources'
-import * as ec2 from '@aws-cdk/aws-ec2'
-import { SubnetType } from '@aws-cdk/aws-ec2'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
+import { SubnetType } from 'aws-cdk-lib/aws-ec2'
 import { AppStackProps } from './AppStackProps'
 import { constructId, constructName } from './index'
 

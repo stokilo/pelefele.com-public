@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as sst from '@serverless-stack/resources'
-import * as SSM from '@aws-cdk/aws-ssm'
-import * as iam from '@aws-cdk/aws-iam'
+import * as SSM from 'aws-cdk-lib/aws-ssm'
+import * as iam from 'aws-cdk-lib/aws-iam'
 import { AppStackProps } from './AppStackProps'
 import { constructId } from './index'
 

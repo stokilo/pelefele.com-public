@@ -1,5 +1,5 @@
 import { App, Stack, Script } from '@serverless-stack/resources'
-import iam from '@aws-cdk/aws-iam'
+import iam from 'aws-cdk-lib/aws-iam'
 import { AppStackProps } from './AppStackProps'
 import { constructId } from './index'
 

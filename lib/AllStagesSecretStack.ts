@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as sst from '@serverless-stack/resources'
-import * as SM from '@aws-cdk/aws-secretsmanager'
+import * as SM from 'aws-cdk-lib/aws-secretsmanager'
 import { AppStackProps } from './AppStackProps'
 import { constructId } from './index'
 

@@ -17,15 +17,6 @@
     "undeploy-prod": "sst remove --stage prod"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.126.0",
-    "@aws-cdk/aws-elasticsearch": "1.126.0",
-    "@aws-cdk/aws-iam": "1.126.0",
-    "@aws-cdk/aws-lambda": "1.126.0",
-    "@aws-cdk/aws-s3": "1.126.0",
-    "@aws-cdk/aws-s3-assets": "1.126.0",
-    "@aws-cdk/aws-s3-deployment": "1.126.0",
-    "@aws-cdk/aws-stepfunctions-tasks": "1.126.0",
-    "@aws-cdk/core": "1.126.0",
     "@babel/core": "^7.15.0",
     "@babel/preset-env": "^7.15.0",
     "@babel/preset-typescript": "^7.15.0",
@@ -34,6 +25,7 @@
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.10",
     "@types/sharp": "^0.29.2",
+    "aws-cdk-lib": "2.24.0",
     "eslint": "^7.32.0",
     "jest": "^27.1.0",
     "jest-runner-tsc": "^1.6.0",

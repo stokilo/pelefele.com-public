@@ -1,11 +1,11 @@
-import { UserPool, UserPoolClient } from '@aws-cdk/aws-cognito'
+import { UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito'
 import { Function, ApiGatewayV1Api, Queue, StackProps, Table } from '@serverless-stack/resources'
-import * as ec2 from '@aws-cdk/aws-ec2'
-import * as es from '@aws-cdk/aws-elasticsearch'
-import * as sfn from '@aws-cdk/aws-stepfunctions'
-import * as SSM from '@aws-cdk/aws-ssm'
-import * as cognito from '@aws-cdk/aws-cognito'
-import * as SM from '@aws-cdk/aws-secretsmanager'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
+import * as es from 'aws-cdk-lib/aws-elasticsearch'
+import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
+import * as SSM from 'aws-cdk-lib/aws-ssm'
+import * as cognito from 'aws-cdk-lib/aws-cognito'
+import * as SM from 'aws-cdk-lib/aws-secretsmanager'
 import BucketConfig from '../lib/BucketConfig'
 
 export declare type AppStackProps = StackProps & {

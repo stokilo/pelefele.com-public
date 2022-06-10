@@ -1,13 +1,13 @@
 import * as sst from '@serverless-stack/resources'
-import { Function, Queue, Table, TableFieldType } from '@serverless-stack/resources'
-import { Duration, RemovalPolicy } from '@aws-cdk/core'
-import { SubnetType } from '@aws-cdk/aws-ec2'
-import iam, { Effect } from '@aws-cdk/aws-iam'
-import { SqsDlq } from '@aws-cdk/aws-lambda-event-sources'
-import { StartingPosition } from '@aws-cdk/aws-lambda'
-import { ProjectionType } from '@aws-cdk/aws-dynamodb'
-import { AppStackProps } from './AppStackProps'
-import { constructId } from './index'
+import {Function, Queue, Table, TableFieldType} from '@serverless-stack/resources'
+import {Duration, RemovalPolicy} from 'aws-cdk-lib'
+import {SubnetType} from 'aws-cdk-lib/aws-ec2'
+import iam, {Effect} from 'aws-cdk-lib/aws-iam'
+import {SqsDlq} from 'aws-cdk-lib/aws-lambda-event-sources'
+import {StartingPosition} from 'aws-cdk-lib/aws-lambda'
+import {ProjectionType} from 'aws-cdk-lib/aws-dynamodb'
+import {AppStackProps} from './AppStackProps'
+import {constructId} from './index'
 
 export default class DynamoDbStack extends sst.Stack {
   constructor (scope: sst.App, id: string, props: AppStackProps) {
@@ -46,14 +46,18 @@ export default class DynamoDbStack extends sst.Stack {
         gsi1: {
           partitionKey: 'gsi1pk',
           sortKey: 'gsi1sk',
-          indexProps: {
-            nonKeyAttributes: ['data'],
-            projectionType: ProjectionType.INCLUDE
+          cdk: {
+            index: {
+              nonKeyAttributes: ['data'],
+              projectionType: ProjectionType.INCLUDE
+            }
           }
         }
       },
-      dynamodbTable: {
-        removalPolicy: RemovalPolicy.DESTROY
+      cdk: {
+        table: {
+          removalPolicy: RemovalPolicy.DESTROY
+        }
       },
       stream: true
     })
@@ -64,7 +68,7 @@ export default class DynamoDbStack extends sst.Stack {
       ...inVpc,
       timeout: 5,
       environment: {
-        DYNAMODB_TABLE_NAME: props.dynamoDbTable!.dynamodbTable.tableName,
+        DYNAMODB_TABLE_NAME: props.dynamoDbTable!.cdk.table.tableName,
         APP_OUTPUT_PARAMETER_NAME: props.appOutputParameterName,
         REGION: props.region,
         STAGE: props.stage

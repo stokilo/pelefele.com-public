@@ -1,10 +1,10 @@
 /* eslint-disable no-new */
 import { App, Stack } from '@serverless-stack/resources'
-import * as es from '@aws-cdk/aws-elasticsearch'
-import { Duration, RemovalPolicy } from '@aws-cdk/core'
-import * as ec2 from '@aws-cdk/aws-ec2'
-import * as route53 from '@aws-cdk/aws-route53'
-import * as iam from '@aws-cdk/aws-iam'
+import * as es from 'aws-cdk-lib/aws-elasticsearch'
+import { Duration, RemovalPolicy } from 'aws-cdk-lib'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
+import * as route53 from 'aws-cdk-lib/aws-route53'
+import * as iam from 'aws-cdk-lib/aws-iam'
 import { AppStackProps } from './AppStackProps'
 import { constructId } from './index'
 

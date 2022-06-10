@@ -5,9 +5,9 @@ import {
   ProviderAttribute, UserPool, UserPoolClient,
   UserPoolClientIdentityProvider, UserPoolIdentityProviderFacebook, UserPoolIdentityProviderGoogle,
   ClientAttributes
-} from '@aws-cdk/aws-cognito'
-import { Duration, RemovalPolicy } from '@aws-cdk/core'
-import { PolicyStatement, Policy } from '@aws-cdk/aws-iam'
+} from 'aws-cdk-lib/aws-cognito'
+import { Duration, RemovalPolicy } from 'aws-cdk-lib'
+import { PolicyStatement, Policy } from 'aws-cdk-lib/aws-iam'
 import { AppStackProps } from './AppStackProps'
 import { constructId, constructName } from './index'
 

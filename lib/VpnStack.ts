@@ -1,7 +1,7 @@
 /* eslint-disable no-new */
 import { App, Stack } from '@serverless-stack/resources'
-import * as ec2 from '@aws-cdk/aws-ec2'
-import * as ssm from '@aws-cdk/aws-ssm'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
+import * as ssm from 'aws-cdk-lib/aws-ssm'
 import { AppStackProps } from './AppStackProps'
 import { constructId, constructName } from './index'
 

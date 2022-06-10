@@ -1,8 +1,8 @@
 /* eslint-disable no-new */
 import { App, Bucket, Stack } from '@serverless-stack/resources'
-import { BucketDeployment, Source, StorageClass } from '@aws-cdk/aws-s3-deployment'
-import { BlockPublicAccess } from '@aws-cdk/aws-s3'
-import { RemovalPolicy } from '@aws-cdk/core'
+import { BucketDeployment, Source, StorageClass } from 'aws-cdk-lib/aws-s3-deployment'
+import { BlockPublicAccess } from 'aws-cdk-lib/aws-s3'
+import { RemovalPolicy } from 'aws-cdk-lib'
 import { APP_BUCKET_NAMES } from './BucketConfig'
 import { AppStackProps } from './AppStackProps'
 import { constructId } from './index'

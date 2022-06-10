@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as sst from '@serverless-stack/resources'
-import { RetentionDays } from '@aws-cdk/aws-logs'
+import { RetentionDays } from 'aws-cdk-lib/aws-logs'
 import BucketConfig from '../lib/BucketConfig'
 import CognitoStack from '../lib/CognitoStack'
 import { PostDeploymentUpdateStack } from './PostDeploymentUpdateStack'
