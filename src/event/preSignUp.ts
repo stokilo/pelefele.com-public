@@ -1,6 +1,6 @@
 import {
   PreSignUpTriggerEvent,
-  PreSignUpTriggerHandler
+  PreSignUpTriggerHandler,
 } from 'aws-lambda/trigger/cognito-user-pool-trigger/pre-signup'
 
 export const handler: PreSignUpTriggerHandler = async (

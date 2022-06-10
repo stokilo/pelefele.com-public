@@ -29,12 +29,8 @@ describe('Unit test for app handler', function () {
     //     a: '1'
     //   }
     // }
-
     // const result = (await handler({} as APIGatewayProxyEventV2, {} as Context, {} as Callback)) as APIGatewayProxyStructuredResultV2
-
     // expect(result.statusCode).toEqual(200)
     // expect(result.body).toEqual(JSON.stringify({ firstName: 'Slawomir Stec' }))
   })
 })
-
-

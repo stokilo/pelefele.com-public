@@ -12,26 +12,31 @@ const appBucketName = process.env.APP_BUCKET_NAME as string
  * Migration 001: import address autocomplete from S3 to ES and DynamoDB
  */
 export default class Migration001Nr1 implements MigrationJob {
-  type (): string {
+  type(): string {
     return 'IMPORT_ADDRESS_ES'
   }
 
   // getObjectKeyToImport = (): string => '0.1/data-sql.csv'
   getObjectKeyToImport = (): string => '0.1/data-sql.csv'
 
-  async migrate (): Promise<boolean> {
+  async migrate(): Promise<boolean> {
     console.info(`Migrate ${this.type()}`)
     return await this.migrateES()
   }
 
-  async migrateES (): Promise<boolean> {
-    logger.info(`Start es data import from: ${appBucketName}/${this.getObjectKeyToImport()}`)
-    const addressImportCSV = await readTextBucket(appBucketName, this.getObjectKeyToImport())
+  async migrateES(): Promise<boolean> {
+    logger.info(
+      `Start es data import from: ${appBucketName}/${this.getObjectKeyToImport()}`
+    )
+    const addressImportCSV = await readTextBucket(
+      appBucketName,
+      this.getObjectKeyToImport()
+    )
     const csvFile = parse(addressImportCSV, {
       columns: true,
       bom: true,
       delimiter: ',',
-      skipEmptyLines: true
+      skipEmptyLines: true,
     })
 
     logger.info('Index creation')
@@ -68,10 +73,17 @@ export default class Migration001Nr1 implements MigrationJob {
         const pk = fullLocationId
         const sk = fullLocationId
         const locationArray = locationName3.split(' ')
-        const location = locationArray.map((e: string) => e.charAt(0) + e.slice(1).toLowerCase()).join(' ').replace('-', ' ')
+        const location = locationArray
+          .map((e: string) => e.charAt(0) + e.slice(1).toLowerCase())
+          .join(' ')
+          .replace('-', ' ')
 
         const esDocument: EsAddressDocument = {
-          pk, sk, city, street, location
+          pk,
+          sk,
+          city,
+          street,
+          location,
         }
         if (!(pk in keys)) {
           batchEsDocuments.push(esDocument)
@@ -80,7 +92,10 @@ export default class Migration001Nr1 implements MigrationJob {
 
         if (batchEsDocuments.length === 2000 || i === csvFile.length - 1) {
           total = total + batchEsDocuments.length
-          const esInsert = await esIndexOps.bulkInsert(batchEsDocuments, ADDRESSES_INDEX_PROPS)
+          const esInsert = await esIndexOps.bulkInsert(
+            batchEsDocuments,
+            ADDRESSES_INDEX_PROPS
+          )
           if (!esInsert) {
             logger.info('Failed to insert to ES index')
             return false

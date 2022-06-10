@@ -1,4 +1,7 @@
-import { DynamoDBStreamEvent, DynamoDBStreamHandler } from 'aws-lambda/trigger/dynamodb-stream'
+import {
+  DynamoDBStreamEvent,
+  DynamoDBStreamHandler,
+} from 'aws-lambda/trigger/dynamodb-stream'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { AttributeValue } from '@aws-sdk/client-dynamodb'
 import EsIndexOps from '../service/es/index-ops'
@@ -10,7 +13,9 @@ import { EntityType } from '../model'
  * Listen on new listing creation. Copy database record to es instance listing index.
  * @param event
  */
-export const handler: DynamoDBStreamHandler = async (event: DynamoDBStreamEvent) => {
+export const handler: DynamoDBStreamHandler = async (
+  event: DynamoDBStreamEvent
+) => {
   for (const dynamoDBRecord of event.Records) {
     const streamRecord = dynamoDBRecord.dynamodb!
 
@@ -20,8 +25,9 @@ export const handler: DynamoDBStreamHandler = async (event: DynamoDBStreamEvent)
         const pk = keys.pk.S as string
 
         if (pk.startsWith(EntityType.LISTING)) {
-          const newImageDynamoDbFormat = streamRecord?.NewImage! as unknown as
-            { [key: string]: AttributeValue }
+          const newImageDynamoDbFormat = streamRecord?.NewImage! as unknown as {
+            [key: string]: AttributeValue
+          }
           const newImageJsonFormat = unmarshall(newImageDynamoDbFormat)
 
           if (newImageJsonFormat.data) {

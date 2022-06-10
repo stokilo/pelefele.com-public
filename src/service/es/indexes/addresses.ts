@@ -5,52 +5,53 @@ import { ADDRESSES_INDEX_PROPS, EsIndexConfig } from '../index'
 export default class AddressesIndexConfig implements EsIndexConfig {
   readonly esIndexOps: EsIndexOps
 
-  constructor () {
+  constructor() {
     this.esIndexOps = new EsIndexOps()
   }
 
-  public async configureIndex (recreate: boolean): Promise<boolean> {
+  public async configureIndex(recreate: boolean): Promise<boolean> {
     const client = await this.esIndexOps.getClient()
     if (recreate) {
-      const indexExists = await this.esIndexOps.indexExists(ADDRESSES_INDEX_PROPS)
+      const indexExists = await this.esIndexOps.indexExists(
+        ADDRESSES_INDEX_PROPS
+      )
       if (indexExists) {
         await this.esIndexOps.deleteIndex(ADDRESSES_INDEX_PROPS)
       }
     }
 
     try {
-      const indexCreate = await client.indices.create({
-        index: ADDRESSES_INDEX_PROPS.indexName(),
-        body: {
-          settings: {
-            number_of_shards: 1,
-            number_of_replicas: 0,
-            analysis: {
-              analyzer: {
-                autocomplete: {
-                  tokenizer: 'autocomplete',
-                  filter: [
-                    'lowercase'
-                  ]
+      const indexCreate = await client.indices.create(
+        {
+          index: ADDRESSES_INDEX_PROPS.indexName(),
+          body: {
+            settings: {
+              number_of_shards: 1,
+              number_of_replicas: 0,
+              analysis: {
+                analyzer: {
+                  autocomplete: {
+                    tokenizer: 'autocomplete',
+                    filter: ['lowercase'],
+                  },
+                  autocomplete_search: {
+                    tokenizer: 'lowercase',
+                  },
                 },
-                autocomplete_search: {
-                  tokenizer: 'lowercase'
-                }
+                tokenizer: {
+                  autocomplete: {
+                    type: 'edge_ngram',
+                    min_gram: 2,
+                    max_gram: 10,
+                    token_chars: ['letter'],
+                  },
+                },
               },
-              tokenizer: {
-                autocomplete: {
-                  type: 'edge_ngram',
-                  min_gram: 2,
-                  max_gram: 10,
-                  token_chars: [
-                    'letter'
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }, { ignore: [400] })
+            },
+          },
+        },
+        { ignore: [400] }
+      )
 
       if (indexCreate.statusCode !== 200) {
         return false
@@ -70,21 +71,21 @@ export default class AddressesIndexConfig implements EsIndexConfig {
               city: {
                 type: 'text',
                 analyzer: 'autocomplete',
-                search_analyzer: 'autocomplete_search'
+                search_analyzer: 'autocomplete_search',
               },
               street: {
                 type: 'text',
                 analyzer: 'autocomplete',
-                search_analyzer: 'autocomplete_search'
+                search_analyzer: 'autocomplete_search',
               },
               location: {
                 type: 'text',
                 analyzer: 'autocomplete',
-                search_analyzer: 'autocomplete_search'
-              }
-            }
-          }
-        }
+                search_analyzer: 'autocomplete_search',
+              },
+            },
+          },
+        },
       })
 
       return mapping.statusCode === 200

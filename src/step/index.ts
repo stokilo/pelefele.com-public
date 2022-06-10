@@ -11,7 +11,8 @@ export const StepFunctionMigrationOkContinue = 'migration-ok-continue'
 export const StepFunctionMigrationError = 'migration-error'
 
 export type StepFunctionMigrationResult = {
-  status: typeof StepFunctionMigrationOkAllDone |
-          typeof StepFunctionMigrationOkContinue |
-          typeof StepFunctionMigrationError
+  status:
+    | typeof StepFunctionMigrationOkAllDone
+    | typeof StepFunctionMigrationOkContinue
+    | typeof StepFunctionMigrationError
 }

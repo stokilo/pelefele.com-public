@@ -1,6 +1,9 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import { PutCommandInput, QueryCommandInput } from '@aws-sdk/lib-dynamodb/dist-types/ts3.4'
+import {
+  PutCommandInput,
+  QueryCommandInput,
+} from '@aws-sdk/lib-dynamodb/dist-types/ts3.4'
 import { EntityObject, MaybeRecord } from './index'
 
 export abstract class BaseEntity<T> {
@@ -8,38 +11,37 @@ export abstract class BaseEntity<T> {
   readonly documentClient: DynamoDBDocument
   readonly tableName: string
 
-  constructor () {
-    this.fullClient = new DynamoDBClient({
-    })
+  constructor() {
+    this.fullClient = new DynamoDBClient({})
     this.documentClient = DynamoDBDocument.from(this.fullClient)
     this.tableName = process.env.DYNAMODB_TABLE_NAME!
   }
 
-  withEntityObject (item: EntityObject<T>) {
+  withEntityObject(item: EntityObject<T>) {
     return {
       Item: {
         pk: item.pk,
         sk: item.sk,
         gsi1pk: item.gsi1pk,
         gsi1sk: item.gsi1sk,
-        data: item.data
-      }
+        data: item.data,
+      },
     }
   }
 
-  withTable () {
+  withTable() {
     return {
-      TableName: this.tableName
+      TableName: this.tableName,
     }
   }
 
-  withReturnTotalCapacity () {
+  withReturnTotalCapacity() {
     return {
-      ReturnConsumedCapacity: 'TOTAL'
+      ReturnConsumedCapacity: 'TOTAL',
     }
   }
 
-  async put (putCommand: PutCommandInput): Promise<boolean> {
+  async put(putCommand: PutCommandInput): Promise<boolean> {
     try {
       await this.documentClient.put(putCommand)
     } catch (error) {
@@ -49,7 +51,7 @@ export abstract class BaseEntity<T> {
     return true
   }
 
-  async singleResultOrError (query: QueryCommandInput): Promise<MaybeRecord<T>> {
+  async singleResultOrError(query: QueryCommandInput): Promise<MaybeRecord<T>> {
     try {
       const result = await this.documentClient.query(query)
       if (result.Items && result.Items.length) {
@@ -68,11 +70,11 @@ export abstract class BaseEntity<T> {
     return this.recordNotFound()
   }
 
-  async multipleResults (query: QueryCommandInput): Promise<T[]> {
+  async multipleResults(query: QueryCommandInput): Promise<T[]> {
     try {
       const result = await this.documentClient.query(query)
       if (result.Items && result.Items.length) {
-        return result.Items.map(e => e.data as T)
+        return result.Items.map((e) => e.data as T)
       }
     } catch (error) {
       console.dir(error)
@@ -85,14 +87,14 @@ export abstract class BaseEntity<T> {
   recordFound = (data: T): MaybeRecord<T> => {
     return {
       found: true,
-      data
+      data,
     }
   }
 
   recordNotFound = (): MaybeRecord<T> => {
     return {
       found: false,
-      data: {} as T
+      data: {} as T,
     }
   }
 }

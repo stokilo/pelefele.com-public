@@ -10,7 +10,9 @@ export const handler: S3Handler = async (event: S3Event) => {
   try {
     const srcBucketName = event.Records[0].s3.bucket.name
     // Object key may have spaces or unicode non-ASCII characters.
-    const srcKey = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '))
+    const srcKey = decodeURIComponent(
+      event.Records[0].s3.object.key.replace(/\+/g, ' ')
+    )
     const dstKey = `${srcKey}-10x10`
     logger.info(`S3 image job started for: ${srcKey}`)
 
@@ -18,28 +20,42 @@ export const handler: S3Handler = async (event: S3Event) => {
     const srcImage = await readBinaryBucket(srcBucketName, srcKey)
     const resizedImage = await sharp(srcImage, {}).resize(10, 10).toBuffer()
 
-    const putUploaded = await s3Client.send(new PutObjectCommand({
-      Bucket: s3ImgBucketName,
-      Key: srcKey,
-      Body: srcImage,
-      ContentType: 'image'
-    }))
+    const putUploaded = await s3Client.send(
+      new PutObjectCommand({
+        Bucket: s3ImgBucketName,
+        Key: srcKey,
+        Body: srcImage,
+        ContentType: 'image',
+      })
+    )
 
-    const putResized = await s3Client.send(new PutObjectCommand({
-      Bucket: s3ImgBucketName,
-      Key: dstKey,
-      Body: resizedImage,
-      ContentType: 'image'
-    }))
+    const putResized = await s3Client.send(
+      new PutObjectCommand({
+        Bucket: s3ImgBucketName,
+        Key: dstKey,
+        Body: resizedImage,
+        ContentType: 'image',
+      })
+    )
 
-    if (putResized.$metadata.httpStatusCode !== 200 ||
-       putUploaded.$metadata.httpStatusCode !== 200) {
+    if (
+      putResized.$metadata.httpStatusCode !== 200 ||
+      putUploaded.$metadata.httpStatusCode !== 200
+    ) {
       logger.info('S3 resize image job failed')
       logger.info(putResized)
       logger.info(putUploaded)
     } else {
-      logger.info('S3 resize image success ' + srcBucketName + '/' + srcKey +
-        ' upload destination ' + s3ImgBucketName + '/' + dstKey)
+      logger.info(
+        'S3 resize image success ' +
+          srcBucketName +
+          '/' +
+          srcKey +
+          ' upload destination ' +
+          s3ImgBucketName +
+          '/' +
+          dstKey
+      )
     }
   } catch (error) {
     logger.error(error)

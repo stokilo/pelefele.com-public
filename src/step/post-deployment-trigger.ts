@@ -11,14 +11,16 @@ export const handler: () => Promise<boolean> = async () => {
 
   const startCommandPostDeployment = new StartExecutionCommand({
     stateMachineArn: process.env.POST_DEPLOYMENT_STATE_MACHINE_ARN!,
-    input: '{}'
+    input: '{}',
   })
-  const responseStartPostDeployment = await sfnClient.send(startCommandPostDeployment)
+  const responseStartPostDeployment = await sfnClient.send(
+    startCommandPostDeployment
+  )
   logger.info(responseStartPostDeployment)
 
   const startCommand = new StartExecutionCommand({
     stateMachineArn: process.env.MIGRATION_STATE_MACHINE_ARN!,
-    input: '{}'
+    input: '{}',
   })
   const responseStart = await sfnClient.send(startCommand)
   logger.info(responseStart)

@@ -4,8 +4,9 @@ import EsIndexOps from 'service/es/index-ops'
 import {
   Listing,
   LISTING_TARGET_RENTAL,
-  LISTING_TARGET_SALE, LISTING_TYPE_APARTMENT,
-  LISTING_TYPE_HOUSE
+  LISTING_TARGET_SALE,
+  LISTING_TYPE_APARTMENT,
+  LISTING_TYPE_HOUSE,
 } from 'shared/listing/listing'
 import { MigrationJob } from '../index'
 import AddressesIndexSearch from '../../service/es/indexes/addresses-search'
@@ -14,11 +15,11 @@ import AddressesIndexSearch from '../../service/es/indexes/addresses-search'
  * Migration 003: fill listing index with random data
  */
 export default class Migration001Nr3 implements MigrationJob {
-  type (): string {
+  type(): string {
     return 'ES_DATA_FOR_LISTINGS_DATA'
   }
 
-  async migrate (): Promise<boolean> {
+  async migrate(): Promise<boolean> {
     console.info(`Migrate ${this.type()}`)
     for (let i = 1; i <= 50; i++) {
       const res = await this.generate(1000)
@@ -29,7 +30,7 @@ export default class Migration001Nr3 implements MigrationJob {
     return true
   }
 
-  async generate (count: number): Promise<boolean> {
+  async generate(count: number): Promise<boolean> {
     logger.info('Listing data generation')
     const batchArr = []
     const esIndexOps = new EsIndexOps()
@@ -64,11 +65,9 @@ export default class Migration001Nr3 implements MigrationJob {
         locationPk: pk,
         locationSk: sk,
         coverFileName: 'cover.jpeg',
-        listingFileNames: ['1.jpeg']
+        listingFileNames: ['1.jpeg'],
       }
-      batchArr.push(
-        listingDoc
-      )
+      batchArr.push(listingDoc)
     }
 
     try {
@@ -80,8 +79,20 @@ export default class Migration001Nr3 implements MigrationJob {
     return true
   }
 
-  randomString () {
+  randomString() {
     const r = Math.floor(Math.random() * 11)
-    return ['kra', 'war', 'siemie', 'grom', 'wiel', 'boch', 'brzes', 'tar', 'bor', 'pad', 'mad'][r]
+    return [
+      'kra',
+      'war',
+      'siemie',
+      'grom',
+      'wiel',
+      'boch',
+      'brzes',
+      'tar',
+      'bor',
+      'pad',
+      'mad',
+    ][r]
   }
 }

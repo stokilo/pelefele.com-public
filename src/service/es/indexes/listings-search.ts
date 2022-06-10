@@ -1,63 +1,95 @@
 import { logger } from 'common/logger'
 import EsIndexOps from 'service/es/index-ops'
-import {
-  ListingsSearchResults
-} from 'shared/listing/search'
+import { ListingsSearchResults } from 'shared/listing/search'
 import {
   Listing,
   LISTING_SORT_AREA_ASC,
   LISTING_TARGET_RENTAL,
   LISTING_TYPE_HOUSE,
-  ListingSchema, sort2Es
+  ListingSchema,
+  sort2Es,
 } from 'shared/listing/listing'
 import { APIGatewayProxyEventQueryStringParameters } from 'aws-lambda/trigger/api-gateway-proxy'
-import {
-  EsIndexSearch, LISTINGS_INDEX_PROPS, MAX_ES_INT
-} from '../index'
+import { EsIndexSearch, LISTINGS_INDEX_PROPS, MAX_ES_INT } from '../index'
 
-export default class ListingsIndexSearch implements EsIndexSearch<ListingsSearchResults> {
+export default class ListingsIndexSearch
+  implements EsIndexSearch<ListingsSearchResults>
+{
   readonly esIndexOps: EsIndexOps
 
-  constructor () {
+  constructor() {
     this.esIndexOps = new EsIndexOps()
   }
 
-  public async search (searchParams: APIGatewayProxyEventQueryStringParameters | null): Promise<ListingsSearchResults> {
+  public async search(
+    searchParams: APIGatewayProxyEventQueryStringParameters | null
+  ): Promise<ListingsSearchResults> {
     const listingsSearchResults: ListingsSearchResults = {
       listings: [],
       totalCount: 0,
-      took: ''
+      took: '',
     }
 
     if (!searchParams) {
       return listingsSearchResults
     }
 
-    const locationPk = ListingsIndexSearch.parseString(searchParams, 'locationPk', '')
-    const locationSk = ListingsIndexSearch.parseString(searchParams, 'locationSk', '')
+    const locationPk = ListingsIndexSearch.parseString(
+      searchParams,
+      'locationPk',
+      ''
+    )
+    const locationSk = ListingsIndexSearch.parseString(
+      searchParams,
+      'locationSk',
+      ''
+    )
 
     if (!locationPk.length || !locationSk.length) {
       return listingsSearchResults
     }
 
-    const minPrice = ListingsIndexSearch.parseNumber(searchParams, 'minPrice', 0)
+    const minPrice = ListingsIndexSearch.parseNumber(
+      searchParams,
+      'minPrice',
+      0
+    )
     const maxPrice = ListingsIndexSearch.replaceValue(
-      ListingsIndexSearch.parseNumber(searchParams, 'maxPrice', MAX_ES_INT), 0, MAX_ES_INT)
+      ListingsIndexSearch.parseNumber(searchParams, 'maxPrice', MAX_ES_INT),
+      0,
+      MAX_ES_INT
+    )
 
     const minArea = ListingsIndexSearch.parseNumber(searchParams, 'minArea', 0)
     const maxArea = ListingsIndexSearch.replaceValue(
-      ListingsIndexSearch.parseNumber(searchParams, 'maxArea', MAX_ES_INT), 0, MAX_ES_INT)
+      ListingsIndexSearch.parseNumber(searchParams, 'maxArea', MAX_ES_INT),
+      0,
+      MAX_ES_INT
+    )
 
-    const pageSize = ListingsIndexSearch.parseNumber(searchParams, 'pageSize', 0)
+    const pageSize = ListingsIndexSearch.parseNumber(
+      searchParams,
+      'pageSize',
+      0
+    )
     const pageNr = ListingsIndexSearch.parseNumber(searchParams, 'pageNr', 0)
 
     const listingType = ListingsIndexSearch.parseString(
-      searchParams, 'listingType', LISTING_TYPE_HOUSE.id)
+      searchParams,
+      'listingType',
+      LISTING_TYPE_HOUSE.id
+    )
     const listingTarget = ListingsIndexSearch.parseString(
-      searchParams, 'listingTarget', LISTING_TARGET_RENTAL.id)
+      searchParams,
+      'listingTarget',
+      LISTING_TARGET_RENTAL.id
+    )
 
     const listingSort = ListingsIndexSearch.parseString(
-      searchParams, 'listingSort', LISTING_SORT_AREA_ASC.id)
+      searchParams,
+      'listingSort',
+      LISTING_SORT_AREA_ASC.id
+    )
     const esSort = sort2Es(listingSort.toString())
     const esSortElem = Object.keys(esSort).length ? [esSort] : []
 
@@ -66,7 +98,9 @@ export default class ListingsIndexSearch implements EsIndexSearch<ListingsSearch
     logger.info(`minArea ${minArea} maxArea ${maxArea}`)
     logger.info(`minPrice ${minPrice} maxPrice ${maxPrice}`)
     logger.info(`listingType ${listingType} listingTarget ${listingTarget}`)
-    logger.info(`listingSort ${listingSort} esSortElem ${JSON.stringify(esSortElem)}`)
+    logger.info(
+      `listingSort ${listingSort} esSortElem ${JSON.stringify(esSortElem)}`
+    )
 
     try {
       const client = await this.esIndexOps.getClient()
@@ -81,47 +115,50 @@ export default class ListingsIndexSearch implements EsIndexSearch<ListingsSearch
               must: [
                 {
                   prefix: {
-                    locationPk
-                  }
+                    locationPk,
+                  },
                 },
                 {
                   prefix: {
-                    locationSk
-                  }
+                    locationSk,
+                  },
                 },
                 {
                   match: {
-                    target: listingTarget
-                  }
+                    target: listingTarget,
+                  },
                 },
                 {
                   match: {
-                    type: listingType
-                  }
+                    type: listingType,
+                  },
                 },
                 {
                   range: {
                     price: {
                       gte: minPrice,
-                      lte: maxPrice
-                    }
-                  }
+                      lte: maxPrice,
+                    },
+                  },
                 },
                 {
                   range: {
                     area: {
                       gte: minArea,
-                      lte: maxArea
-                    }
-                  }
-                }
-              ]
-            }
-          }
-        }
+                      lte: maxArea,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
       })
 
-      logger.info(`count: ${searchResult.body.hits.total.value} took: ${searchResult.body.took} ms`, 'SearchResult::')
+      logger.info(
+        `count: ${searchResult.body.hits.total.value} took: ${searchResult.body.took} ms`,
+        'SearchResult::'
+      )
       if (searchResult.statusCode === 200) {
         listingsSearchResults.listings = searchResult.body.hits.hits.map(
           (e: { _source: Listing }) => ListingSchema.parse(e._source)
@@ -136,8 +173,11 @@ export default class ListingsIndexSearch implements EsIndexSearch<ListingsSearch
     return listingsSearchResults
   }
 
-  private static parseNumber (searchParams: APIGatewayProxyEventQueryStringParameters,
-    paramName: string, defaultValue: number): number {
+  private static parseNumber(
+    searchParams: APIGatewayProxyEventQueryStringParameters,
+    paramName: string,
+    defaultValue: number
+  ): number {
     if (paramName in searchParams) {
       const val = +(searchParams[paramName] as string)
       return isNaN(val) || val < 0 || val > MAX_ES_INT ? defaultValue : val
@@ -146,8 +186,11 @@ export default class ListingsIndexSearch implements EsIndexSearch<ListingsSearch
     return defaultValue
   }
 
-  private static parseString (searchParams: APIGatewayProxyEventQueryStringParameters,
-    paramName: string, defaultValue: string): string {
+  private static parseString(
+    searchParams: APIGatewayProxyEventQueryStringParameters,
+    paramName: string,
+    defaultValue: string
+  ): string {
     if (paramName in searchParams) {
       return searchParams[paramName] as string
     }
@@ -155,7 +198,11 @@ export default class ListingsIndexSearch implements EsIndexSearch<ListingsSearch
     return defaultValue
   }
 
-  private static replaceValue (realValue: number, toReplaceValue: number, replacement: number) {
+  private static replaceValue(
+    realValue: number,
+    toReplaceValue: number,
+    replacement: number
+  ) {
     return realValue === toReplaceValue ? replacement : realValue
   }
 }

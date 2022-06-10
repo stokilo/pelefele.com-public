@@ -7,11 +7,11 @@ export default class EsIndexOps {
   readonly esClient: EsClient
   client: Client
 
-  constructor () {
+  constructor() {
     this.esClient = new EsClient(process.env.REGION as string)
   }
 
-  public async getClient () : Promise<Client> {
+  public async getClient(): Promise<Client> {
     if (this.client) {
       return this.client
     }
@@ -19,12 +19,15 @@ export default class EsIndexOps {
     return this.client
   }
 
-  public async index<T> (document: T, esIndexProps: EsIndexProps) : Promise<boolean> {
+  public async index<T>(
+    document: T,
+    esIndexProps: EsIndexProps
+  ): Promise<boolean> {
     try {
       const client = await this.getClient()
       const result = await client.index({
         index: esIndexProps.indexName(),
-        body: document
+        body: document,
       })
 
       return result.statusCode === 201
@@ -34,14 +37,17 @@ export default class EsIndexOps {
     return false
   }
 
-  public async bulkInsert<T> (dataset: Array<T>, esIndexProps: EsIndexProps) {
+  public async bulkInsert<T>(dataset: Array<T>, esIndexProps: EsIndexProps) {
     try {
       logger.time(`Processing ${dataset.length} documents`)
       const client = await this.getClient()
-      const toIndex = dataset.flatMap(doc => [{ index: { _index: esIndexProps.indexName() } }, doc])
+      const toIndex = dataset.flatMap((doc) => [
+        { index: { _index: esIndexProps.indexName() } },
+        doc,
+      ])
       const bulkResult = await client.bulk({
         refresh: true,
-        body: toIndex
+        body: toIndex,
       })
       logger.timeEnd(`Processing ${dataset.length} documents`)
       return bulkResult.statusCode === 200
@@ -51,11 +57,11 @@ export default class EsIndexOps {
     }
   }
 
-  public async indexExists (esIndexProps: EsIndexProps): Promise<boolean> {
+  public async indexExists(esIndexProps: EsIndexProps): Promise<boolean> {
     try {
       const client = await this.getClient()
       const result = await client.indices.exists({
-        index: esIndexProps.indexName()
+        index: esIndexProps.indexName(),
       })
       return result.body
     } catch (e) {
@@ -64,10 +70,12 @@ export default class EsIndexOps {
     }
   }
 
-  public async deleteIndex (esIndexProps: EsIndexProps): Promise<boolean> {
+  public async deleteIndex(esIndexProps: EsIndexProps): Promise<boolean> {
     try {
       const client = await this.getClient()
-      const result = await client.indices.delete({ index: esIndexProps.indexName() })
+      const result = await client.indices.delete({
+        index: esIndexProps.indexName(),
+      })
       return result.statusCode === 200
     } catch (e) {
       logger.error(e)

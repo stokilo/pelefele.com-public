@@ -1,8 +1,7 @@
-
 export enum EntityType {
   SYSTEM_INFORMATION = 'SYSTEM_INFORMATION',
   LISTING = 'LISTING',
-  ES_INDEXED_LISTING = 'ES_INDEXED_LISTING'
+  ES_INDEXED_LISTING = 'ES_INDEXED_LISTING',
 }
 
 /**
@@ -15,29 +14,31 @@ export enum EntityType {
  *
  */
 export type EntityObject<T> = {
-  pk: string,
-  sk: string,
-  gsi1pk?: string,
-  gsi1sk?: string,
+  pk: string
+  sk: string
+  gsi1pk?: string
+  gsi1sk?: string
   data?: T
 }
 
-export function emptyEntityObject<T> (): EntityObject<T> {
+export function emptyEntityObject<T>(): EntityObject<T> {
   return {
     pk: '',
-    sk: ''
+    sk: '',
   }
 }
 
-export function newEntityObjectWithPkSk<T> (data: T & {pk: string, sk: string}): EntityObject<T> {
+export function newEntityObjectWithPkSk<T>(
+  data: T & { pk: string; sk: string }
+): EntityObject<T> {
   return {
     pk: data.pk,
     sk: data.sk,
-    data
+    data,
   }
 }
 
 export type MaybeRecord<T> = {
-  found: boolean,
+  found: boolean
   data: T
 }

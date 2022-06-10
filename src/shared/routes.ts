@@ -6,11 +6,10 @@ import { APIGatewayProxyEvent } from 'aws-lambda'
 
 export const ADMIN_ROUTES = {
   ADMIN_DUMMY: 'admin/dummy',
-  ADMIN_PANEL: 'admin/panel'
+  ADMIN_PANEL: 'admin/panel',
 }
 
-export const UNAUTHENTICATED_ROUTE_NAMES = {
-} as const
+export const UNAUTHENTICATED_ROUTE_NAMES = {} as const
 
 export const ROUTE_NAMES = {
   ...ADMIN_ROUTES,
@@ -18,8 +17,7 @@ export const ROUTE_NAMES = {
 
   S3_SIGNED_URLS: 's3-signed-urls',
   LISTINGS: 'listings',
-  SEARCH: 'search'
-
+  SEARCH: 'search',
 } as const
 
 export const ROUTES = {
@@ -32,10 +30,12 @@ export const ROUTES = {
   GET_LISTING: `GET /${ROUTE_NAMES.LISTINGS}/{id}`,
   GET_LISTINGS: `GET /${ROUTE_NAMES.LISTINGS}`,
 
-  GET_SEARCH: `GET /${ROUTE_NAMES.SEARCH}`
-
+  GET_SEARCH: `GET /${ROUTE_NAMES.SEARCH}`,
 } as const
 
-export function isRoute (event: APIGatewayProxyEvent, routeName: string): boolean {
+export function isRoute(
+  event: APIGatewayProxyEvent,
+  routeName: string
+): boolean {
   return event.resource === `/${routeName}`
 }

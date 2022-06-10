@@ -4,7 +4,7 @@ import {
   StepFunctionMigrationError,
   StepFunctionMigrationOkAllDone,
   StepFunctionMigrationOkContinue,
-  StepFunctionMigrationResult
+  StepFunctionMigrationResult,
 } from './index'
 
 /**
@@ -17,12 +17,14 @@ export const handler: () => Promise<StepFunctionMigrationResult> = async () => {
   await systemAdminService.showMigrations()
 
   const response: StepFunctionMigrationResult = {
-    status: StepFunctionMigrationOkAllDone
+    status: StepFunctionMigrationOkAllDone,
   }
 
   try {
     const hasNext = await systemAdminService.migrateNext()
-    response.status = hasNext ? StepFunctionMigrationOkContinue : StepFunctionMigrationOkAllDone
+    response.status = hasNext
+      ? StepFunctionMigrationOkContinue
+      : StepFunctionMigrationOkAllDone
   } catch (err) {
     logger.error(err)
     response.status = StepFunctionMigrationError

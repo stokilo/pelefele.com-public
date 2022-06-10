@@ -5,28 +5,33 @@ import { EsIndexConfig, LISTINGS_INDEX_PROPS } from '../index'
 export default class ListingsIndexConfig implements EsIndexConfig {
   readonly esIndexOps: EsIndexOps
 
-  constructor () {
+  constructor() {
     this.esIndexOps = new EsIndexOps()
   }
 
-  public async configureIndex (recreate: boolean): Promise<boolean> {
+  public async configureIndex(recreate: boolean): Promise<boolean> {
     const client = await this.esIndexOps.getClient()
     if (recreate) {
-      const indexExists = await this.esIndexOps.indexExists(LISTINGS_INDEX_PROPS)
+      const indexExists = await this.esIndexOps.indexExists(
+        LISTINGS_INDEX_PROPS
+      )
       if (indexExists) {
         await this.esIndexOps.deleteIndex(LISTINGS_INDEX_PROPS)
       }
     }
 
     try {
-      const indexCreate = await client.indices.create({
-        index: LISTINGS_INDEX_PROPS.indexName(),
-        body: {
-          settings: {
-            number_of_shards: 1
-          }
-        }
-      }, { ignore: [400] })
+      const indexCreate = await client.indices.create(
+        {
+          index: LISTINGS_INDEX_PROPS.indexName(),
+          body: {
+            settings: {
+              number_of_shards: 1,
+            },
+          },
+        },
+        { ignore: [400] }
+      )
 
       if (indexCreate.statusCode !== 200) {
         return false
@@ -40,38 +45,38 @@ export default class ListingsIndexConfig implements EsIndexConfig {
           listing: {
             properties: {
               title: {
-                type: 'text'
+                type: 'text',
               },
               pk: {
-                type: 'text'
+                type: 'text',
               },
               sk: {
-                type: 'text'
+                type: 'text',
               },
               type: {
-                type: 'integer'
+                type: 'integer',
               },
               target: {
-                type: 'integer'
+                type: 'integer',
               },
               area: {
-                type: 'integer'
+                type: 'integer',
               },
               price: {
-                type: 'integer'
+                type: 'integer',
               },
               location: {
-                type: 'text'
+                type: 'text',
               },
               locationPk: {
-                type: 'keyword'
+                type: 'keyword',
               },
               locationSk: {
-                type: 'keyword'
-              }
-            }
-          }
-        }
+                type: 'keyword',
+              },
+            },
+          },
+        },
       })
 
       return mapping.statusCode === 200

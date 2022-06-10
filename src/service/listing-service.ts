@@ -4,37 +4,45 @@ import {
   GetListing,
   GetListings,
   Listing,
-  PostListing
+  PostListing,
 } from 'shared/listing/listing'
 import { StatusNOTOK, StatusOK, ValidationOK } from 'shared/form'
 import { ListingEntity } from '../model/ListingEntity'
 
 export class ListingService {
-
-  async getListing (pk: string, sk: string): Promise<GetListing> {
+  async getListing(pk: string, sk: string): Promise<GetListing> {
     const listingEntity = new ListingEntity()
     return {
-      listing: await listingEntity.load(pk, sk)
+      listing: await listingEntity.load(pk, sk),
     }
   }
 
-  async fetchListings (requestContext: RequestContext): Promise<GetListings> {
+  async fetchListings(requestContext: RequestContext): Promise<GetListings> {
     const listingEntity = new ListingEntity()
     return {
-      listings: await listingEntity.list(requestContext.userId, { Limit: 5, ScanIndexForward: false })
+      listings: await listingEntity.list(requestContext.userId, {
+        Limit: 5,
+        ScanIndexForward: false,
+      }),
     }
   }
 
-  async onListingSave (listing: Listing, requestContext: RequestContext): Promise<PostListing> {
+  async onListingSave(
+    listing: Listing,
+    requestContext: RequestContext
+  ): Promise<PostListing> {
     const response: PostListing = {
       status: StatusOK(),
       validation: ValidationOK(),
-      listing
+      listing,
     }
 
     try {
       const listingEntity = new ListingEntity()
-      const { success, savedListing } = await listingEntity.save(listing, requestContext.userId)
+      const { success, savedListing } = await listingEntity.save(
+        listing,
+        requestContext.userId
+      )
 
       response.status = success ? StatusOK() : StatusNOTOK()
       if (success) {

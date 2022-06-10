@@ -5,6 +5,6 @@
  * @param errorMessage that we throw
  */
 
-export function throwExpression (errorMessage: string): never {
+export function throwExpression(errorMessage: string): never {
   throw new Error(errorMessage)
 }

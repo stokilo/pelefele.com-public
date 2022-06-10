@@ -1,7 +1,4 @@
-import {
-  APIGatewayProxyEvent,
-  APIGatewayProxyHandler
-} from 'aws-lambda'
+import { APIGatewayProxyEvent, APIGatewayProxyHandler } from 'aws-lambda'
 import { logger } from 'common/logger'
 import { http200WithJSONBody } from 'rest'
 import { S3Service } from 'service/s3-service'
@@ -21,15 +18,19 @@ const listingService = new ListingService()
  * @param event
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) => {
+export const handler: APIGatewayProxyHandler = async (
+  event: APIGatewayProxyEvent
+) => {
   let resultObj = {}
   try {
     const requestContext = toRequestContext(event)
     if (event.requestContext.httpMethod === HttpMethods.POST) {
       if (event.body) {
         if (isRoute(event, ROUTE_NAMES.LISTINGS)) {
-          resultObj = await listingService.onListingSave(ListingSchema.parse(JSON.parse(event.body)),
-            requestContext)
+          resultObj = await listingService.onListingSave(
+            ListingSchema.parse(JSON.parse(event.body)),
+            requestContext
+          )
         }
       }
     } else if (event.requestContext.httpMethod === HttpMethods.GET) {

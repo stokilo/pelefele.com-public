@@ -2,20 +2,28 @@ import { logger } from 'common/logger'
 import EsIndexOps from 'service/es/index-ops'
 import {
   LocationSearchResults,
-  LocationSearchResultSchema
+  LocationSearchResultSchema,
 } from 'shared/listing/search'
-import { ADDRESSES_INDEX_PROPS, EsAddressDocument, EsIndexSearch } from '../index'
+import {
+  ADDRESSES_INDEX_PROPS,
+  EsAddressDocument,
+  EsIndexSearch,
+} from '../index'
 
-export default class AddressesIndexSearch implements EsIndexSearch<LocationSearchResults> {
+export default class AddressesIndexSearch
+  implements EsIndexSearch<LocationSearchResults>
+{
   readonly esIndexOps: EsIndexOps
 
-  constructor () {
+  constructor() {
     this.esIndexOps = new EsIndexOps()
   }
 
-  public async search (searchParams: { [key: string]: string }): Promise<LocationSearchResults> {
+  public async search(searchParams: {
+    [key: string]: string
+  }): Promise<LocationSearchResults> {
     const locationSearchResults: LocationSearchResults = {
-      locations: []
+      locations: [],
     }
     try {
       const terms = searchParams.term.split(' ')
@@ -23,7 +31,9 @@ export default class AddressesIndexSearch implements EsIndexSearch<LocationSearc
       const term1 = terms.length ? terms.shift() : ''
       const term2 = !terms.length ? term1 : terms.join(' ')
 
-      logger.info(`status: term1: [${term1}] term2: [${term2}] boost: [${boost}] searchParams.term: [${searchParams.term}]`)
+      logger.info(
+        `status: term1: [${term1}] term2: [${term2}] boost: [${boost}] searchParams.term: [${searchParams.term}]`
+      )
 
       const client = await this.esIndexOps.getClient()
       const searchResult = await client.search({
@@ -35,10 +45,10 @@ export default class AddressesIndexSearch implements EsIndexSearch<LocationSearc
               location: {
                 query: searchParams.term,
                 fuzziness: 0,
-                operator: 'and'
-              }
-            }
-          }
+                operator: 'and',
+              },
+            },
+          },
           // query: {
           //   multi_match: {
           //     query: searchParams.term,
@@ -50,18 +60,17 @@ export default class AddressesIndexSearch implements EsIndexSearch<LocationSearc
           //     ]
           //   }
           // }
-        }
-      }
-      )
+        },
+      })
 
       logger.info(searchResult.body.hits, 'SearchResult::')
       if (searchResult.statusCode === 200) {
         locationSearchResults.locations = searchResult.body.hits.hits.map(
-          (e: { _source: EsAddressDocument }) => LocationSearchResultSchema.parse(e._source)
+          (e: { _source: EsAddressDocument }) =>
+            LocationSearchResultSchema.parse(e._source)
         )
       }
-    } catch
-    (e) {
+    } catch (e) {
       logger.error(e)
     }
     return locationSearchResults
