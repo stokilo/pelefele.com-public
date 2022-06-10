@@ -19,7 +19,7 @@ await uploadWorker(secretConfigs, argv.env)
 /**
  * Upload static website to worker instance.
  */
-async function uploadWorker (config, env) {
+async function uploadWorker(config, env) {
   console.info(`Deploying to worker instance on environment [${env}] ...`)
   await child.exec(`node ./node_modules/@cloudflare/wrangler/run-wrangler.js publish --env ${env}`,
     {
@@ -28,7 +28,7 @@ async function uploadWorker (config, env) {
         CF_ACCOUNT_ID: config[`${env}_CLOUDFLARE_ACCOUNT_ID`],
         CF_API_TOKEN: config[`${env}_CLOUDFLARE_API_TOKEN`]
       }
-    }, function (error, stdout, stderr) {
+    }, function(error, stdout, stderr) {
       if (error) {
         console.log(`error: ${error.message}`)
         return
@@ -44,13 +44,13 @@ async function uploadWorker (config, env) {
 /**
  * Fetch account level secret. Extract cloudflare secret values from it.
  */
-async function fetchAwsCloudflareSecretConfig () {
+async function fetchAwsCloudflareSecretConfig() {
   try {
     const sstConfig = fs.readFileSync(path.normalize('../sst.json')).toJSON()
     const client = new SecretsManagerClient({ region: sstConfig.region })
 
     const secretValue = (await client.send(
-      new GetSecretValueCommand({ SecretId: 'all-stages/pelefele' }))
+        new GetSecretValueCommand({ SecretId: 'all-stages/pelefele' }))
     ).SecretString
 
     return JSON.parse(secretValue)

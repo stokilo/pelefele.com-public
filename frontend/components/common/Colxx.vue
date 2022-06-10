@@ -1,10 +1,10 @@
 <template>
-  <b-col :class="classes" v-bind="options">
+  <b-col :class='classes' v-bind='options'>
     <slot />
   </b-col>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import Component from 'vue-class-component'
 import Vue from 'vue'
 
@@ -40,10 +40,10 @@ const ColxxProps = Vue.extend({
 
 @Component
 export default class Colxx extends ColxxProps {
-  options: Object = {};
-  classes: Object = {};
+  options: Object = {}
+  classes: Object = {}
 
-  mounted () {
+  mounted() {
     let cols = {}
     let customClass = {}
 

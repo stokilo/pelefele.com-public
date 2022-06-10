@@ -3,14 +3,14 @@ import { ROUTE_NAMES } from '@backend/routes'
 import {
   LocationSearchResult,
   LocationSearchResults,
-  LocationSearchResultsSchema
+  LocationSearchResultsSchema,
 } from '@backend/listing/search'
 import ApiCall from '~/store/api/api-call'
 
 export const VuexModule = createModule({
   namespaced: 'locationSearch',
   strict: false,
-  target: 'nuxt'
+  target: 'nuxt',
 })
 
 export class LocationSearchStore extends VuexModule {
@@ -18,19 +18,28 @@ export class LocationSearchStore extends VuexModule {
   locationData: Array<LocationSearchResult> = []
   isFetching: boolean = false
 
-  @mutation mutateLocationData (mutatedData: Array<LocationSearchResult>) {
+  @mutation mutateLocationData(mutatedData: Array<LocationSearchResult>) {
     this.locationData = mutatedData
   }
 
   @action
-  async onSearch (term: string) {
+  async onSearch(term: string) {
     if (process.env.isMockMode) {
       return this.mutateLocationData([
-        { pk: '950960-979', sk: '950960-979', location: 'małopolskie Kraków podgórze Kraka' }
+        {
+          pk: '950960-979',
+          sk: '950960-979',
+          location: 'małopolskie Kraków podgórze Kraka',
+        },
       ])
     }
-    const res = await this.apiCall.$get<LocationSearchResults, typeof LocationSearchResultsSchema>(
-      ROUTE_NAMES.SEARCH, LocationSearchResultsSchema, { term, index: 'address' })
+    const res = await this.apiCall.$get<
+      LocationSearchResults,
+      typeof LocationSearchResultsSchema
+    >(ROUTE_NAMES.SEARCH, LocationSearchResultsSchema, {
+      term,
+      index: 'address',
+    })
     if (res && res.locations) {
       await this.mutateLocationData(res.locations)
     }

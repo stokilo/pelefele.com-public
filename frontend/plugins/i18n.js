@@ -18,20 +18,21 @@ export default ({ app }) => {
     locale: 'en',
     fallbackLocale: 'en',
     messages: {
-      en
-    }
+      en,
+    },
   })
 
   // conversion filter for date values received from python backend
   Vue.filter('formatPDate', function (value) {
     if (value) {
       const vDate = new Date(value * 1000)
-      return `${vDate.toLocaleDateString('en-us')} ${vDate.toLocaleTimeString('en-us')}`
+      return `${vDate.toLocaleDateString('en-us')} ${vDate.toLocaleTimeString(
+        'en-us'
+      )}`
     }
   })
 
-  configure({
-  })
+  configure({})
 
   initializeI18n(app.i18n)
 }

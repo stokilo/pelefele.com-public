@@ -11,12 +11,12 @@ export const store = new Vuex.Store({
   modules: {
     ...extractVuexModule(LocationSearchStore),
     ...extractVuexModule(ListingSearchStore),
-    ...extractVuexModule(ListingStore)
-  }
+    ...extractVuexModule(ListingStore),
+  },
 })
 
 export const proxy = {
   listingStore: createProxy(store, ListingStore),
   listingSearchStore: createProxy(store, ListingSearchStore),
-  locationSearchStore: createProxy(store, LocationSearchStore)
+  locationSearchStore: createProxy(store, LocationSearchStore),
 }

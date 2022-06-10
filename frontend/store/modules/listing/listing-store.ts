@@ -1,9 +1,15 @@
 import { createModule, mutation, action, getter } from 'vuex-class-component'
 import {
-  GetListings, GetListingsSchema,
-  Listing, LISTING_TARGETS, LISTING_TYPES, ListingSelect,
+  GetListings,
+  GetListingsSchema,
+  Listing,
+  LISTING_TARGETS,
+  LISTING_TYPES,
+  ListingSelect,
   newListing,
-  newTestListing, PostListing, PostListingSchema
+  newTestListing,
+  PostListing,
+  PostListingSchema,
 } from '@backend/listing/listing'
 import { ROUTE_NAMES } from '@backend/routes'
 import { LocationSearchResult } from '@backend/listing/search'
@@ -13,7 +19,7 @@ import UploadService from '~/store/api/app/upload-service'
 export const VuexModule = createModule({
   namespaced: 'listing',
   strict: false,
-  target: 'nuxt'
+  target: 'nuxt',
 })
 
 export class ListingStore extends VuexModule {
@@ -28,12 +34,12 @@ export class ListingStore extends VuexModule {
   tableColumns: Array<any> = [
     {
       field: 'title',
-      label: 'Title'
+      label: 'Title',
     },
     {
       field: 'price',
-      label: 'Price'
-    }
+      label: 'Price',
+    },
   ]
 
   coverPreviewUrl: string = ''
@@ -43,38 +49,38 @@ export class ListingStore extends VuexModule {
   listingTargets: Array<ListingSelect> = LISTING_TARGETS
 
   @getter
-  areFieldsFilled (): boolean {
+  areFieldsFilled(): boolean {
     return true
   }
 
-  @mutation deleteDropFile (index: number) {
+  @mutation deleteDropFile(index: number) {
     this.listingFiles.splice(index, 1)
     this.listingPreviewUrls.splice(index, 1)
   }
 
-  @mutation mutateListing (mutatedListing: Listing) {
+  @mutation mutateListing(mutatedListing: Listing) {
     this.listing = mutatedListing
   }
 
-  @mutation mutateCoverFileName (coverFileName: string) {
+  @mutation mutateCoverFileName(coverFileName: string) {
     this.listing.coverFileName = coverFileName
   }
 
-  @mutation mutateListingFileNames (listingFileNames: Array<string>) {
+  @mutation mutateListingFileNames(listingFileNames: Array<string>) {
     this.listing.listingFileNames = listingFileNames
   }
 
-  @mutation mutateListings (listings: Listing[]) {
+  @mutation mutateListings(listings: Listing[]) {
     this.listings = listings
   }
 
   @mutation
-  onFileUpdateCover (file: File) {
+  onFileUpdateCover(file: File) {
     this.coverPreviewUrl = URL.createObjectURL(file)
   }
 
   @mutation
-  onFileUpdateListing (files: File[]) {
+  onFileUpdateListing(files: File[]) {
     this.listingPreviewUrls = []
     for (let i = 0; i < files.length; i++) {
       const f = files[i]
@@ -84,17 +90,18 @@ export class ListingStore extends VuexModule {
   }
 
   @mutation
-  onLocationSelect (selectedLocation: LocationSearchResult) {
+  onLocationSelect(selectedLocation: LocationSearchResult) {
     this.listing.location = selectedLocation.location
     this.listing.locationPk = selectedLocation.pk
     this.listing.locationSk = selectedLocation.sk
   }
 
   @action
-  async loadListings () {
-    const response = await this.apiCall.$get<GetListings, typeof GetListingsSchema>(
-      ROUTE_NAMES.LISTINGS, GetListingsSchema)
-
+  async loadListings() {
+    const response = await this.apiCall.$get<
+      GetListings,
+      typeof GetListingsSchema
+    >(ROUTE_NAMES.LISTINGS, GetListingsSchema)
 
     if (response && response.listings) {
       console.dir(response.listings)
@@ -103,7 +110,7 @@ export class ListingStore extends VuexModule {
   }
 
   @action
-  async onSaveListing (): Promise<PostListing | undefined> {
+  async onSaveListing(): Promise<PostListing | undefined> {
     let count = this.coverFile.name.length ? 1 : 0
     count = this.listingFiles ? count + this.listingFiles.length : count
 
@@ -116,14 +123,20 @@ export class ListingStore extends VuexModule {
       if (s3SignUrls.length > 1) {
         const remaining = s3SignUrls.splice(1)
         for (let i = 0; i < remaining.length; i++) {
-          await this.uploadService.uploadS3Post(remaining[i].url, this.listingFiles[i])
+          await this.uploadService.uploadS3Post(
+            remaining[i].url,
+            this.listingFiles[i]
+          )
         }
-        const remainingFileNames = remaining.map(r => r.fileName)
+        const remainingFileNames = remaining.map((r) => r.fileName)
         await this.mutateListingFileNames(remainingFileNames)
       }
     }
 
-    return await this.apiCall.$post<Listing, PostListing, typeof PostListingSchema>(
-      ROUTE_NAMES.LISTINGS, this.listing, PostListingSchema)
+    return await this.apiCall.$post<
+      Listing,
+      PostListing,
+      typeof PostListingSchema
+    >(ROUTE_NAMES.LISTINGS, this.listing, PostListingSchema)
   }
 }

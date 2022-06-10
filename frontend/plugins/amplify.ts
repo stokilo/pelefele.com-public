@@ -8,7 +8,7 @@ Amplify.configure({
     region: awsConfig.region,
     userPoolId: awsConfig.cognitoUserPoolId,
     userPoolWebClientId: awsConfig.cognitoUserPoolClientId,
-    identityPoolId: awsConfig.cognitoIdentityPoolId
+    identityPoolId: awsConfig.cognitoIdentityPoolId,
   },
 
   API: {
@@ -19,17 +19,25 @@ Amplify.configure({
         region: awsConfig.region,
         custom_header: async () => {
           return {
-            Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`
+            Authorization: `Bearer ${(await Auth.currentSession())
+              .getIdToken()
+              .getJwtToken()}`,
           }
-        }
-      }
-    ]
+        },
+      },
+    ],
   },
   oauth: {
     domain: `${awsConfig.cognitoDomainPrefix}.auth.${awsConfig.region}.amazoncognito.com`,
-    scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
+    scope: [
+      'phone',
+      'email',
+      'profile',
+      'openid',
+      'aws.cognito.signin.user.admin',
+    ],
     redirectSignIn: awsConfig.cognitoRedirectSignInUrl,
     redirectSignOut: awsConfig.cognitoRedirectSignOutUrl,
-    responseType: 'code'
-  }
+    responseType: 'code',
+  },
 })

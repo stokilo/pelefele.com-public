@@ -15,9 +15,9 @@ export default {
   components: {
     CreateListing
   },
-  created () {
+  created() {
     if (process.browser) {
-      window.onbeforeunload = function () {
+      window.onbeforeunload = function() {
         sessionStorage.setItem('authToken', $token.getJwt())
         sessionStorage.setItem('refreshToken', $token.getRefreshToken())
       }

@@ -7,10 +7,7 @@ import { $log } from '~/utils/api'
  * @param redirect
  * @param route
  */
-export default async function ({
-  redirect,
-  route
-}) {
+export default async function ({ redirect, route }) {
   if (NuxtJsRouteHelper.isLogoutRoute(route.name)) {
     redirect(NuxtJsRouteHelper.getIndexRoute())
   }

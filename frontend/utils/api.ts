@@ -5,42 +5,42 @@ class Token {
   private jwt: string
   private refreshToken: string
 
-  constructor () {
+  constructor() {
     this.jwt = ''
     this.refreshToken = ''
   }
 
-  reset () {
+  reset() {
     this.setJwt('')
     this.setRefreshToken('')
     sessionStorage.clear()
   }
 
-  setJwt (jwt: string) {
+  setJwt(jwt: string) {
     this.jwt = jwt
   }
 
-  getJwt (): string {
+  getJwt(): string {
     return this.jwt
   }
 
-  setRefreshToken (refreshToken: string) {
+  setRefreshToken(refreshToken: string) {
     this.refreshToken = refreshToken
   }
 
-  getRefreshToken (): string {
+  getRefreshToken(): string {
     return this.refreshToken
   }
 
-  hasValidJwtToken (): boolean {
+  hasValidJwtToken(): boolean {
     return this.isTokenValid(this.getJwt())
   }
 
-  hasValidRefreshToken (): boolean {
+  hasValidRefreshToken(): boolean {
     return this.isTokenValid(this.getRefreshToken())
   }
 
-  isTokenValid (token: string): boolean {
+  isTokenValid(token: string): boolean {
     if (!token || token.length <= 0) {
       return false
     }
@@ -65,24 +65,24 @@ let $i18n: any
 let $notify: any
 let $log: any
 
-export function initializeLog (log: any) {
+export function initializeLog(log: any) {
   $log = log
 }
 
-export function initializeAxios (axiosInstance: NuxtAxiosInstance) {
+export function initializeAxios(axiosInstance: NuxtAxiosInstance) {
   $axios = axiosInstance
   $token = new Token()
 }
 
-export function initializeLoader (loader: any) {
+export function initializeLoader(loader: any) {
   $loader = loader
 }
 
-export function initializeI18n (i18n: any) {
+export function initializeI18n(i18n: any) {
   $i18n = i18n
 }
 
-export function initializeNotify (notify: any) {
+export function initializeNotify(notify: any) {
   $notify = notify
 }
 

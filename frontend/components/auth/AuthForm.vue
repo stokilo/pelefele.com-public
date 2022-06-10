@@ -1,17 +1,17 @@
 <template>
-  <div class="container">
+  <div class='container'>
     <amplify-authenticator>
-      <amplify-sign-in slot="sign-in">
-        <amplify-sign-in-button slot="federated-buttons">
-          <div class="pb-2">
-            <a href="#" class="fb connect" @click="onClickFacebook">Sign in with Facebook</a>
+      <amplify-sign-in slot='sign-in'>
+        <amplify-sign-in-button slot='federated-buttons'>
+          <div class='pb-2'>
+            <a href='#' class='fb connect' @click='onClickFacebook'>Sign in with Facebook</a>
           </div>
           <br>
-          <div class="">
+          <div class=''>
             <a
-              href="#"
-              class="sign-in-with-google"
-              @click="onClickGoogle"
+              href='#'
+              class='sign-in-with-google'
+              @click='onClickGoogle'
             ><span>Sign in with <strong>Google</strong></span></a>
           </div>
         </amplify-sign-in-button>
@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import Vue from 'vue'
 import Component from 'vue-class-component'
 // import { Hub } from '@aws-amplify/core'
@@ -30,16 +30,16 @@ import { Auth, CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 export default class AuthForm extends Vue {
   // isAuth: boolean = false
 
-  async mounted () {
+  async mounted() {
     // this.isAuth = await this.isLogIn()
     // await Hub.listen('auth', async () => await this.onShowUser())
   }
 
-  async onClickFacebook () {
+  async onClickFacebook() {
     await Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Facebook })
   }
 
-  async onClickGoogle () {
+  async onClickGoogle() {
     await Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Google })
   }
 
@@ -59,7 +59,7 @@ export default class AuthForm extends Vue {
 
 </script>
 
-<style scoped lang="scss">
+<style scoped lang='scss'>
 body {
   background-color: #363f61;
   margin-top: 30%;

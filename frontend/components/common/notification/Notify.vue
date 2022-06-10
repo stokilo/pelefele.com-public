@@ -1,19 +1,20 @@
 <template>
-    <div :class="{'notification-container': true, 'notification-container-empty' : items.length===0}">
-    <transition-group name="ntf" tag="div" mode="out"  >
-        <div   v-for="item in items" :key="item.id"  :class="'notification notification-'+item.options.type"  @click="removeItem(item.id)">
-           <div class="notification-message">
-              <h4 class="title" v-if="item.title">{{ item.title }}</h4>
-             <div class="message" v-if="item.message">{{item.message}}</div>
-            </div>
+  <div :class="{'notification-container': true, 'notification-container-empty' : items.length===0}">
+    <transition-group name='ntf' tag='div' mode='out'>
+      <div v-for='item in items' :key='item.id' :class="'notification notification-'+item.options.type"
+           @click='removeItem(item.id)'>
+        <div class='notification-message'>
+          <h4 class='title' v-if='item.title'>{{ item.title }}</h4>
+          <div class='message' v-if='item.message'>{{ item.message }}</div>
         </div>
+      </div>
     </transition-group>
   </div>
 </template>
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       message: null,
       title: null,
@@ -27,7 +28,7 @@ export default {
     }
   },
   methods: {
-    createUUID () {
+    createUUID() {
       const pattern = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
       return pattern.replace(/[xy]/g, c => {
         const r = (Math.random() * 16) | 0
@@ -35,7 +36,7 @@ export default {
         return v.toString(16)
       })
     },
-    addItem (type, title, message, options) {
+    addItem(type, title, message, options) {
       let defaultOptions = {
         type: type,
         duration: this.options.duration,
@@ -59,25 +60,28 @@ export default {
         }, itemOptions.duration)
       }
     },
-    removeItem (uid) {
+    removeItem(uid) {
       this.items = Object.assign([], this.items.filter(x => x.id !== uid))
     },
-    removeAll () {
+    removeAll() {
       this.items = []
     }
   }
 }
 </script>
-<style >
+<style>
 .ntf-enter {
   opacity: 0;
 }
+
 .ntf-leave {
   opacity: 1;
 }
+
 .ntf-enter-active {
   animation: slideInRight 0.4s;
 }
+
 .ntf-leave-active {
   animation: slideOutRight 0.4s;
 }

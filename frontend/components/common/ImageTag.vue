@@ -1,17 +1,17 @@
 <template>
   <picture>
-    <source :srcSet="require(`~/assets/img/${this.src}?webp`)" type="image/webp">
-    <source :srcSet="require(`~/assets/img/${this.src}`)" type="image/jpeg">
+    <source :srcSet='require(`~/assets/img/${this.src}?webp`)' type='image/webp'>
+    <source :srcSet='require(`~/assets/img/${this.src}`)' type='image/jpeg'>
     <img
-      :src="require(`~/assets/img/${this.src}`)"
-      :class="this.className"
-      :alt="this.alt"
-      :style="{ backgroundColor: require(`~/assets/img/${this.src}?lqip-colors`)[0] }"
+      :src='require(`~/assets/img/${this.src}`)'
+      :class='this.className'
+      :alt='this.alt'
+      :style='{ backgroundColor: require(`~/assets/img/${this.src}?lqip-colors`)[0] }'
     >
   </picture>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import Component from 'vue-class-component'
 import Vue from 'vue'
 

@@ -1,18 +1,18 @@
 <template>
   <picture>
 
-    <source :srcSet="this.getWebPSrcSet" type="image/webp">
-    <source :srcSet="this.getJpegSrcSet" type="image/jpeg">
+    <source :srcSet='this.getWebPSrcSet' type='image/webp'>
+    <source :srcSet='this.getJpegSrcSet' type='image/jpeg'>
 
     <img
-      :src="this.getJpegSrc"
-      :class="this.className"
-      :alt="this.alt"
+      :src='this.getJpegSrc'
+      :class='this.className'
+      :alt='this.alt'
     >
   </picture>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import Component from 'vue-class-component'
 import Vue from 'vue'
 
@@ -27,21 +27,21 @@ const ResizeImageTagProps = Vue.extend({
 
 @Component
 export default class ResizeImageTag extends ResizeImageTagProps {
-  webp_320 = require(`~/assets/img/${this.src}?resize&size=320&format=webp`);
-  webp_640 = require(`~/assets/img/${this.src}?resize&size=640&format=webp`);
-  webp_960 = require(`~/assets/img/${this.src}?resize&size=960&format=webp`);
-  webp_1200 = require(`~/assets/img/${this.src}?resize&size=1200&format=webp`);
-  webp_1800 = require(`~/assets/img/${this.src}?resize&size=1800&format=webp`);
-  webp_2400 = require(`~/assets/img/${this.src}?resize&size=2400&format=webp`);
+  webp_320 = require(`~/assets/img/${this.src}?resize&size=320&format=webp`)
+  webp_640 = require(`~/assets/img/${this.src}?resize&size=640&format=webp`)
+  webp_960 = require(`~/assets/img/${this.src}?resize&size=960&format=webp`)
+  webp_1200 = require(`~/assets/img/${this.src}?resize&size=1200&format=webp`)
+  webp_1800 = require(`~/assets/img/${this.src}?resize&size=1800&format=webp`)
+  webp_2400 = require(`~/assets/img/${this.src}?resize&size=2400&format=webp`)
 
-  jpeg_320 = require(`~/assets/img/${this.src}?resize&size=320`);
-  jpeg_640 = require(`~/assets/img/${this.src}?resize&size=640`);
-  jpeg_960 = require(`~/assets/img/${this.src}?resize&size=960`);
-  jpeg_1200 = require(`~/assets/img/${this.src}?resize&size=1200`);
-  jpeg_1800 = require(`~/assets/img/${this.src}?resize&size=1800`);
-  jpeg_2400 = require(`~/assets/img/${this.src}?resize&size=2400`);
+  jpeg_320 = require(`~/assets/img/${this.src}?resize&size=320`)
+  jpeg_640 = require(`~/assets/img/${this.src}?resize&size=640`)
+  jpeg_960 = require(`~/assets/img/${this.src}?resize&size=960`)
+  jpeg_1200 = require(`~/assets/img/${this.src}?resize&size=1200`)
+  jpeg_1800 = require(`~/assets/img/${this.src}?resize&size=1800`)
+  jpeg_2400 = require(`~/assets/img/${this.src}?resize&size=2400`)
 
-  get getWebPSrcSet () {
+  get getWebPSrcSet() {
     if (this.resizeTo === '320') {
       return this.webp_320.srcSet
     } else if (this.resizeTo === '640') {
@@ -58,7 +58,7 @@ export default class ResizeImageTag extends ResizeImageTagProps {
     return this.webp_320.srcSet
   }
 
-  get getJpegSrcSet () {
+  get getJpegSrcSet() {
     if (this.resizeTo === '320') {
       return this.jpeg_320.srcSet
     } else if (this.resizeTo === '640') {
@@ -75,7 +75,7 @@ export default class ResizeImageTag extends ResizeImageTagProps {
     return this.jpeg_320.srcSet
   }
 
-  get getJpegSrc () {
+  get getJpegSrc() {
     if (this.resizeTo === '320') {
       return this.jpeg_320.srcSet
     } else if (this.resizeTo === '640') {
@@ -92,7 +92,7 @@ export default class ResizeImageTag extends ResizeImageTagProps {
     return this.jpeg_320.src
   }
 
-  get getMedia () {
+  get getMedia() {
     if (this.resizeTo === '320') {
       return '(max-width: 320px)'
     } else if (this.resizeTo === '640') {

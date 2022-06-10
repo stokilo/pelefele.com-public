@@ -14,13 +14,13 @@ await fetchAwsConfig(env)
 /**
  * Read AWS region from sst.json configuration file and load account level SSM config.
  */
-async function fetchAwsConfig (env) {
+async function fetchAwsConfig(env) {
   try {
     const sstConfig = fs.readFileSync(path.normalize('../sst.json')).toJSON()
 
     const ssmClient = new SSMClient({ region: sstConfig.region })
     const accountConfig = (await ssmClient.send(
-      new GetParameterCommand({ Name: `/app-output/pelefele/${env}` }))
+        new GetParameterCommand({ Name: `/app-output/pelefele/${env}` }))
     ).Parameter.Value
 
     const accountConfigPretty = JSON.stringify(JSON.parse(accountConfig), null, 4)

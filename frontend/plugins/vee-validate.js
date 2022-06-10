@@ -7,28 +7,28 @@ Vue.component('ValidationProvider', ValidationProvider)
 Vue.component('ValidationObserver', ValidationObserver)
 
 extend('required', {
-  ...required
+  ...required,
 })
 
 extend('email', {
-  ...email
+  ...email,
 })
 
 extend('confirmed', {
-  ...confirmed
+  ...confirmed,
 })
 
 extend('min', {
-  ...min
+  ...min,
 })
 
 extend('max', {
-  ...max
+  ...max,
 })
 
 Vue.mixin({
   methods: {
-    formError (isValid, failedRules) {
+    formError(isValid, failedRules) {
       if (isValid) {
         return ''
       }
@@ -44,6 +44,6 @@ Vue.mixin({
       }
 
       return ''
-    }
-  }
+    },
+  },
 })

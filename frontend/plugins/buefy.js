@@ -27,9 +27,9 @@ Vue.use(Buefy, {
         default: 'lg',
         'is-small': '1x',
         'is-medium': '2x',
-        'is-large': '3x'
+        'is-large': '3x',
       },
-      iconPrefix: ''
-    }
-  }
+      iconPrefix: '',
+    },
+  },
 })

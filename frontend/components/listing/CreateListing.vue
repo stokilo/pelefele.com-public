@@ -1,40 +1,40 @@
 <template>
   <div>
-    <div id="app">
-      <section class="hero is-light" :class="{ 'is-fullheight': !showFiltersMode }">
-        <div class="hero-body  p-b-30 ">
-          <div class="container">
-            <ValidationObserver ref="form" v-slot="{ invalid }">
-              <fieldset :disabled="isFormDisabled">
-                <div class="columns">
-                  <div class="column">
-                    <ValidationProvider v-slot="{ valid, failedRules }" rules="required|min:5|max:250" vid="title">
+    <div id='app'>
+      <section class='hero is-light' :class="{ 'is-fullheight': !showFiltersMode }">
+        <div class='hero-body  p-b-30 '>
+          <div class='container'>
+            <ValidationObserver ref='form' v-slot='{ invalid }'>
+              <fieldset :disabled='isFormDisabled'>
+                <div class='columns'>
+                  <div class='column'>
+                    <ValidationProvider v-slot='{ valid, failedRules }' rules='required|min:5|max:250' vid='title'>
                       <b-field
                         :label="$t('listing.title')"
                         :type="{ 'is-danger': !valid, 'is-success': valid }"
-                        :message="formError(valid, failedRules)"
+                        :message='formError(valid, failedRules)'
                       >
-                        <b-input v-model="listingStore.listing.title" maxlength="249" name="title" />
+                        <b-input v-model='listingStore.listing.title' maxlength='249' name='title' />
                       </b-field>
                     </ValidationProvider>
-                    <ValidationProvider v-slot="{ valid, failedRules }" rules="required|min:5|max:250" vid="location">
+                    <ValidationProvider v-slot='{ valid, failedRules }' rules='required|min:5|max:250' vid='location'>
                       <b-field
-                        label="Location"
+                        label='Location'
                         :type="{ 'is-danger': !valid, 'is-success': valid }"
-                        :message="formError(valid, failedRules)"
+                        :message='formError(valid, failedRules)'
                       >
                         <b-autocomplete
-                          v-model="listingStore.listing.location"
-                          field="location"
-                          :data="locationSearchStore.locationData"
-                          placeholder="Warszawa"
-                          :loading="locationSearchStore.isFetching"
-                          @typing="searchAddress"
-                          @select="onLocationSelect"
+                          v-model='listingStore.listing.location'
+                          field='location'
+                          :data='locationSearchStore.locationData'
+                          placeholder='Warszawa'
+                          :loading='locationSearchStore.isFetching'
+                          @typing='searchAddress'
+                          @select='onLocationSelect'
                         >
-                          <template slot-scope="props">
-                            <div class="media">
-                              <div class="media-content">
+                          <template slot-scope='props'>
+                            <div class='media'>
+                              <div class='media-content'>
                                 {{ props.option.location }}
                                 <br>
                               </div>
@@ -46,29 +46,29 @@
                   </div>
                 </div>
 
-                <div class="columns">
-                  <div class="column is-one-third">
-                    <div class="columns">
-                      <div class="column is-half">
-                        <b-field label="Type">
-                          <b-select v-model="listingStore.listing.type" placeholder="Select a type">
+                <div class='columns'>
+                  <div class='column is-one-third'>
+                    <div class='columns'>
+                      <div class='column is-half'>
+                        <b-field label='Type'>
+                          <b-select v-model='listingStore.listing.type' placeholder='Select a type'>
                             <option
-                              v-for="option in listingStore.listingTypes"
-                              :key="option.id"
-                              :value="option.id"
+                              v-for='option in listingStore.listingTypes'
+                              :key='option.id'
+                              :value='option.id'
                             >
                               {{ option.value }}
                             </option>
                           </b-select>
                         </b-field>
                       </div>
-                      <div class="column is-half">
-                        <b-field label="Target">
-                          <b-select v-model="listingStore.listing.target" placeholder="Select a target">
+                      <div class='column is-half'>
+                        <b-field label='Target'>
+                          <b-select v-model='listingStore.listing.target' placeholder='Select a target'>
                             <option
-                              v-for="option in listingStore.listingTargets"
-                              :key="option.id"
-                              :value="option.id"
+                              v-for='option in listingStore.listingTargets'
+                              :key='option.id'
+                              :value='option.id'
                             >
                               {{ option.value }}
                             </option>
@@ -78,28 +78,28 @@
                     </div>
                   </div>
 
-                  <div class="column is-two-thirds">
-                    <div class="columns">
-                      <div class="column is-half">
-                        <ValidationProvider v-slot="{ valid, failedRules }" rules="required" vid="area">
+                  <div class='column is-two-thirds'>
+                    <div class='columns'>
+                      <div class='column is-half'>
+                        <ValidationProvider v-slot='{ valid, failedRules }' rules='required' vid='area'>
                           <b-field
                             :label="$t('listing.area')"
                             :type="{ 'is-danger': !valid, 'is-success': valid }"
-                            :message="formError(valid, failedRules)"
+                            :message='formError(valid, failedRules)'
                           >
-                            <b-input v-model="listingStore.listing.area" maxlength="249" name="area" type="number" />
+                            <b-input v-model='listingStore.listing.area' maxlength='249' name='area' type='number' />
                           </b-field>
                         </ValidationProvider>
                       </div>
 
-                      <div class="column is-half">
-                        <ValidationProvider v-slot="{ valid, failedRules }" rules="required" vid="price">
+                      <div class='column is-half'>
+                        <ValidationProvider v-slot='{ valid, failedRules }' rules='required' vid='price'>
                           <b-field
                             :label="$t('listing.price')"
                             :type="{ 'is-danger': !valid, 'is-success': valid }"
-                            :message="formError(valid, failedRules)"
+                            :message='formError(valid, failedRules)'
                           >
-                            <b-input v-model="listingStore.listing.price" maxlength="249" name="price" type="number" />
+                            <b-input v-model='listingStore.listing.price' maxlength='249' name='price' type='number' />
                           </b-field>
                         </ValidationProvider>
                       </div>
@@ -109,26 +109,26 @@
               </fieldset>
               <br>
               <section>
-                <b-field class="file">
-                  <b-upload v-model="listingStore.coverFile" expanded @input="listingStore.onFileUpdateCover">
-                    <a class="button is-primary is-fullwidth">
-                      <b-icon icon="upload" />
+                <b-field class='file'>
+                  <b-upload v-model='listingStore.coverFile' expanded @input='listingStore.onFileUpdateCover'>
+                    <a class='button is-primary is-fullwidth'>
+                      <b-icon icon='upload' />
                       <span>{{ listingStore.coverFile.name || $t('listing.upload.clickToUpload') }}</span>
                     </a>
                   </b-upload>
                 </b-field>
                 <b-field>
                   <b-upload
-                    v-model="listingStore.listingFiles"
+                    v-model='listingStore.listingFiles'
                     multiple
                     drag-drop
                     expanded
-                    @input="listingStore.onFileUpdateListing"
+                    @input='listingStore.onFileUpdateListing'
                   >
-                    <section class="section">
-                      <div class="content has-text-centered">
+                    <section class='section'>
+                      <div class='content has-text-centered'>
                         <p>
-                          <b-icon icon="upload" size="is-large" />
+                          <b-icon icon='upload' size='is-large' />
                         </p>
                         <p>{{ $t('listing.upload.dropFilesToUpload') }}</p>
                       </div>
@@ -136,57 +136,57 @@
                   </b-upload>
                 </b-field>
 
-                <div v-if="listingStore.coverPreviewUrl.length" class="columns">
-                  <div class="column">
-                    <div class="box">
+                <div v-if='listingStore.coverPreviewUrl.length' class='columns'>
+                  <div class='column'>
+                    <div class='box'>
                       <b-image
-                        :src="listingStore.coverPreviewUrl"
-                        alt="Preview"
-                        :rounded="true"
-                        class="image is-128x128"
+                        :src='listingStore.coverPreviewUrl'
+                        alt='Preview'
+                        :rounded='true'
+                        class='image is-128x128'
                       />
                     </div>
                   </div>
                 </div>
 
-                <div class="tags">
-                  <span v-for="(file, index) in listingStore.listingFiles" :key="index" class="tag is-primary">
+                <div class='tags'>
+                  <span v-for='(file, index) in listingStore.listingFiles' :key='index' class='tag is-primary'>
                     {{ file.name }}
-                    <button class="delete is-small" type="button" @click="listingStore.deleteDropFile(index)" />
+                    <button class='delete is-small' type='button' @click='listingStore.deleteDropFile(index)' />
                   </span>
                 </div>
 
-                <div class="box">
-                  <div class="columns is-multiline">
+                <div class='box'>
+                  <div class='columns is-multiline'>
                     <div
-                      v-for="(file, index) in listingStore.listingPreviewUrls"
-                      :key="index"
-                      class="column"
+                      v-for='(file, index) in listingStore.listingPreviewUrls'
+                      :key='index'
+                      class='column'
                     >
                       <b-field>
                         <b-tag
-                          type="is-danger"
+                          type='is-danger'
                           attached
                           closable
-                          aria-close-label="Close tag"
-                          @close="listingStore.deleteDropFile(index)"
+                          aria-close-label='Close tag'
+                          @close='listingStore.deleteDropFile(index)'
                         >
                           Delete
                         </b-tag>
                       </b-field>
 
                       <b-image
-                        :src="file"
-                        alt="Preview"
-                        :rounded="true"
-                        class="image is-128x128"
+                        :src='file'
+                        alt='Preview'
+                        :rounded='true'
+                        class='image is-128x128'
                       />
                     </div>
                   </div>
                 </div>
               </section>
               <hr>
-              <b-button type="is-primary" class="pb-2" :disabled="invalid" @click="onSaveListing">
+              <b-button type='is-primary' class='pb-2' :disabled='invalid' @click='onSaveListing'>
                 Create
               </b-button>
             </ValidationObserver>
@@ -198,7 +198,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Debounce } from 'vue-debounce-decorator'
@@ -217,15 +217,15 @@ export default class CreateListing extends Vue {
   listingSendErrorMessage: string = ''
   showFiltersMode: boolean = false
 
-  get isFormFilled () {
+  get isFormFilled() {
     return this.listingStore.areFieldsFilled
   }
 
-  get isGlobalFormError (): boolean {
+  get isGlobalFormError(): boolean {
     return !!this.listingSendErrorMessage.length
   }
 
-  async onSaveListing () {
+  async onSaveListing() {
     this.isFormDisabled = true
     const loader = $loader.show()
 
@@ -269,7 +269,7 @@ export default class CreateListing extends Vue {
   }
 
   @Debounce(500)
-  async searchAddress (name: string) {
+  async searchAddress(name: string) {
     if (name.length >= 3) {
       await this.locationSearchStore.onSearch(name)
     } else {
@@ -277,7 +277,7 @@ export default class CreateListing extends Vue {
     }
   }
 
-  async onLocationSelect (selectedLocation: LocationSearchResult) {
+  async onLocationSelect(selectedLocation: LocationSearchResult) {
     if (selectedLocation) {
       await this.listingStore.onLocationSelect(selectedLocation)
     }

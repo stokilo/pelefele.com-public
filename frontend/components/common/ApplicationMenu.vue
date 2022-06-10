@@ -1,41 +1,42 @@
 <template>
-  <div :class="{'app-menu':true, 'shown' : isOpen}"  @mouseenter="isMenuOver=true" @mouseleave="isMenuOver=false">
+  <div :class="{'app-menu':true, 'shown' : isOpen}" @mouseenter='isMenuOver=true' @mouseleave='isMenuOver=false'>
     <slot></slot>
-    <a class="app-menu-button d-inline-block d-xl-none" @click.prevent="toggle">
-      <b-icon icon="menu-button" variant="primary"/>
+    <a class='app-menu-button d-inline-block d-xl-none' @click.prevent='toggle'>
+      <b-icon icon='menu-button' variant='primary' />
     </a>
   </div>
 </template>
 
 <script>
 import { setTimeout } from 'timers'
+
 export default {
-  data () {
+  data() {
     return {
       isOpen: false,
       isMenuOver: false
     }
   },
   methods: {
-    addEvents () {
+    addEvents() {
       document.addEventListener('click', this.handleDocumentClick)
       document.addEventListener('touchstart', this.handleDocumentClick)
     },
-    removeEvents () {
+    removeEvents() {
       document.removeEventListener('click', this.handleDocumentClick)
       document.removeEventListener('touchstart', this.handleDocumentClick)
     },
-    handleDocumentClick (e) {
+    handleDocumentClick(e) {
       if (!this.isMenuOver) {
         this.toggle()
       }
     },
-    toggle () {
+    toggle() {
       this.isOpen = !this.isOpen
     }
   },
   watch: {
-    isOpen (val) {
+    isOpen(val) {
       if (val) {
         setTimeout(() => {
           this.$emit('show')
@@ -47,7 +48,7 @@ export default {
       }
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.removeEvents()
   }
 }

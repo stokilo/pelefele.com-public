@@ -11,7 +11,7 @@ const accessor: Plugin = () => {
     showLogLevel: true,
     showMethodName: false,
     separator: '|',
-    showConsoleColors: true
+    showConsoleColors: true,
   }
 
   // @ts-ignore

@@ -7,28 +7,20 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "patch-package",
-
     "predev": "./../sso.sh && node config.mjs --env local",
     "dev": "STAGE_NAME=local nuxt",
-
     "preanalyze": "node config.mjs --env local",
     "analyze": "STAGE_NAME=local nuxt build --analyze",
-
     "prestart": "./../sso.sh && node config.mjs --env local",
     "start": "STAGE_NAME=local nuxt start",
-
     "prebuild": "./../sso.sh && node config.mjs --env local",
     "build": "nuxt build",
-
     "generate": "nuxt generate",
     "lint": "eslint --ext .ts,.js,.vue .",
-
     "predeploy-prod": "node config.mjs --env prod",
     "deploy-prod": "STAGE_NAME=prod nuxt generate && node deploy.mjs --env prod",
-
     "predeploy-dev": "node config.mjs --env dev",
     "deploy-dev": "STAGE_NAME=dev nuxt generate && node deploy.mjs --env dev",
-
     "predeploy-local": "node config.mjs --env local",
     "deploy-local": "STAGE_NAME=local nuxt generate && node deploy.mjs --env local"
   },

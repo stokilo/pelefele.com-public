@@ -10,46 +10,56 @@ export default {
     base: '/',
     mode: 'history',
     middleware: 'auth',
-    prefetchLinks: false
+    prefetchLinks: false,
   },
   /*
-  ** Headers of the page
-  */
+   ** Headers of the page
+   */
   head: {
     htmlAttrs: {
-      lang: 'en'
+      lang: 'en',
     },
     titleTemplate: 'Real estate',
     title: 'Real estate portal',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' },
-      { hid: 'description', name: 'description', content: 'pelefele.com - real estate search engine' },
-      { hid: 'keywords', name: 'keywords', content: 'property, properties, rent, buy, sale, apartment, apartments, home, homes, land' }
+      {
+        name: 'viewport',
+        content:
+          'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no',
+      },
+      {
+        hid: 'description',
+        name: 'description',
+        content: 'pelefele.com - real estate search engine',
+      },
+      {
+        hid: 'keywords',
+        name: 'keywords',
+        content:
+          'property, properties, rent, buy, sale, apartment, apartments, home, homes, land',
+      },
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     bodyAttrs: {
-      class: ''
-    }
+      class: '',
+    },
   },
   /*
-  ** Customize the progress-bar color
-  */
+   ** Customize the progress-bar color
+   */
   loadingIndicator: {
     name: 'pulse',
     color: '#3B8070',
-    background: 'white'
+    background: 'white',
   },
   /*
-  ** Global CSS
-  */
-  css: [
-  ],
+   ** Global CSS
+   */
+  css: [],
   /*
-  ** Plugins to load before mounting the App
-  */
+   ** Plugins to load before mounting the App
+   */
   plugins: [
     { src: '~/plugins/amplify.ts', mode: 'client' },
     { src: '~/plugins/buefy.js', mode: 'client' },
@@ -57,31 +67,24 @@ export default {
     { src: '~/plugins/i18n.js', mode: 'client' },
     { src: '~/plugins/overlay.ts', mode: 'client' },
     { src: '~/plugins/vee-validate.js', mode: 'client' },
-    { src: '~/plugins/axios-accessor.ts', mode: 'client' }
+    { src: '~/plugins/axios-accessor.ts', mode: 'client' },
   ],
   /*
-  ** Nuxt.js dev-modules
-  */
-  buildModules: [
-    '@nuxt/typescript-build',
-    '@aceforth/nuxt-optimized-images'
-  ],
+   ** Nuxt.js dev-modules
+   */
+  buildModules: ['@nuxt/typescript-build', '@aceforth/nuxt-optimized-images'],
 
   /*
-  ** Nuxt.js modules
-  */
-  modules: [
-    '@nuxtjs/axios',
-    '@nuxtjs/robots',
-    '@nuxtjs/sitemap'
-  ],
+   ** Nuxt.js modules
+   */
+  modules: ['@nuxtjs/axios', '@nuxtjs/robots', '@nuxtjs/sitemap'],
   robots: [
     { UserAgent: '*', Disallow: '/api' },
     { UserAgent: '*', Disallow: '/login' },
     { UserAgent: '*', Disallow: '/signup' },
     { UserAgent: '*', Disallow: '/logout' },
     { UserAgent: '*', Disallow: '/app' },
-    { Sitemap: 'https://pelefele.com/sitemap.xml' }
+    { Sitemap: 'https://pelefele.com/sitemap.xml' },
   ],
   sitemap: {
     hostname: 'pelefele.com',
@@ -93,26 +96,26 @@ export default {
       '/signup',
       '/logout',
       '/app',
-      '/app/**'
-    ]
+      '/app/**',
+    ],
   },
 
   proxy: {
-    '/api': awsConfig.apiEndpoint
+    '/api': awsConfig.apiEndpoint,
   },
 
   axios: {
-    baseURL: awsConfig.apiEndpoint
+    baseURL: awsConfig.apiEndpoint,
   },
 
   /*
-  ** Build configuration
-  */
+   ** Build configuration
+   */
   build: {
     /*
-    ** You can extend webpack config here
-    */
-    extend (config, ctx) {
+     ** You can extend webpack config here
+     */
+    extend(config, ctx) {
       config.output.publicPath = './_nuxt/'
 
       if (!config.resolve) {
@@ -121,27 +124,29 @@ export default {
       if (!config.resolve.plugins) {
         config.resolve.plugins = []
       }
-      config.resolve.plugins.push(new TsconfigPathsPlugin({ configFile: './tsconfig.json' }))
+      config.resolve.plugins.push(
+        new TsconfigPathsPlugin({ configFile: './tsconfig.json' })
+      )
     },
     analyze: false,
     babel: {
-      compact: true
+      compact: true,
     },
     parallel: true,
     cache: true,
     hardSource: isDevMode,
-    transpile: ['vue-debounce-decorator']
+    transpile: ['vue-debounce-decorator'],
   },
 
   components: false,
 
   optimizedImages: {
     optimizeImages: true,
-    optimizeImagesInDev: false
+    optimizeImagesInDev: false,
   },
   env: {
     stage: process.env.STAGE_NAME,
     isMockMode: false,
-    isDevMode
-  }
+    isDevMode,
+  },
 }

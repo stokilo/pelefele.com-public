@@ -1,24 +1,24 @@
-type="webpack"
-account_id="c597c88a0e327181e7342fd3e27a5b3f"
-zone_id="8da2c1d3d383d6c83b9f695d83ecf944"
-route=""
-usage_model=""
-compatibility_flags=[]
-workers_dev=false
-site={bucket="./dist", entry-point="workers-site"}
-compatibility_date="2021-10-22"
+type = "webpack"
+account_id = "c597c88a0e327181e7342fd3e27a5b3f"
+zone_id = "8da2c1d3d383d6c83b9f695d83ecf944"
+route = ""
+usage_model = ""
+compatibility_flags = []
+workers_dev = false
+site = { bucket = "./dist", entry-point = "workers-site" }
+compatibility_date = "2021-10-22"
 
 [env.local]
-name="local_pelefele_com"
-route="local.pelefele.com/*"
-workers_dev=false
+name = "local_pelefele_com"
+route = "local.pelefele.com/*"
+workers_dev = false
 
 [env.dev]
-name="dev_pelefele_com"
-route="dev.pelefele.com/*"
-workers_dev=false
+name = "dev_pelefele_com"
+route = "dev.pelefele.com/*"
+workers_dev = false
 
 [env.prod]
-name="prod_pelefele_com"
-route="pelefele.com/*"
-workers_dev=false
+name = "prod_pelefele_com"
+route = "pelefele.com/*"
+workers_dev = false

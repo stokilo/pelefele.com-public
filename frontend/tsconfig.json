@@ -18,9 +18,15 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./*"],
-      "@/*": ["./*"],
-      "@backend/*": ["../src/shared/*"]
+      "~/*": [
+        "./*"
+      ],
+      "@/*": [
+        "./*"
+      ],
+      "@backend/*": [
+        "../src/shared/*"
+      ]
     },
     "types": [
       "@types/node",
