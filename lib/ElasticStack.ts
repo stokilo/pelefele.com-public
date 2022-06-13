@@ -1,6 +1,6 @@
 /* eslint-disable no-new */
 import { App, Stack } from '@serverless-stack/resources'
-import * as es from 'aws-cdk-lib/aws-elasticsearch'
+import * as es from 'aws-cdk-lib/aws-opensearchservice'
 import { Duration, RemovalPolicy } from 'aws-cdk-lib'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as route53 from 'aws-cdk-lib/aws-route53'
@@ -20,16 +20,18 @@ export default class ElasticStack extends Stack {
     })
 
     const domainProps: es.DomainProps = {
-      version: es.ElasticsearchVersion.V7_10,
+      version: es.EngineVersion.ELASTICSEARCH_7_1,
       removalPolicy: RemovalPolicy.DESTROY,
       vpc: props.vpc,
-      securityGroups: [props.sgForIsolatedSubnet!],
+      securityGroups: props.sgForIsolatedSubnet
+        ? [props.sgForIsolatedSubnet]
+        : [],
       vpcSubnets: [
         {
           subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
           availabilityZones: [
-            props.vpc!.availabilityZones[0],
-            props.vpc!.availabilityZones[1],
+            props.vpc?.availabilityZones[0] ?? '',
+            props.vpc?.availabilityZones[1] ?? '',
           ],
         },
       ],
@@ -51,14 +53,14 @@ export default class ElasticStack extends Stack {
       domainProps
     )
 
-    const hostedZoneId = props
-      .allStagesSecrets!.secretValueFromJson(
-        `${props.stageUpperCase}_HOSTED_ZONE_ID`
-      )
-      .toString()
-    const awssWsHostedZone = route53.HostedZone.fromHostedZoneAttributes(
+    const hostedZoneId =
+      props.allStagesSecrets
+        ?.secretValueFromJson(`${props.stageUpperCase}_HOSTED_ZONE_ID`)
+        .toString() ?? ''
+
+    const hostedZone = route53.HostedZone.fromHostedZoneAttributes(
       this,
-      constructId('awsws-hosted-zone', props),
+      constructId('hosted-zone', props),
       {
         zoneName: props.hostedZoneName,
         hostedZoneId,
@@ -69,7 +71,7 @@ export default class ElasticStack extends Stack {
       recordName: `${props.domainStagePrefix}es`,
       domainName: props.esDomain.domainEndpoint,
       ttl: Duration.seconds(10),
-      zone: awssWsHostedZone,
+      zone: hostedZone,
     })
 
     // this.exportValue(props.esDomain, {name: 'esDomain'})

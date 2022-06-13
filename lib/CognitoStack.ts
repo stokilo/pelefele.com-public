@@ -86,16 +86,16 @@ export default class CognitoStack extends sst.Stack {
       constructId('user-pool-identity-provider-facebook', props),
       {
         userPool: props.cognitoUserPool,
-        clientId: props
-          .allStagesSecrets!.secretValueFromJson(
-            `${props.stageUpperCase}_FACEBOOK_CLIENT_ID`
-          )
-          .toString(),
-        clientSecret: props
-          .allStagesSecrets!.secretValueFromJson(
-            `${props.stageUpperCase}_FACEBOOK_CLIENT_SECRET`
-          )
-          .toString(),
+        clientId:
+          props.allStagesSecrets
+            ?.secretValueFromJson(`${props.stageUpperCase}_FACEBOOK_CLIENT_ID`)
+            .toString() ?? '',
+        clientSecret:
+          props.allStagesSecrets
+            ?.secretValueFromJson(
+              `${props.stageUpperCase}_FACEBOOK_CLIENT_SECRET`
+            )
+            .toString() ?? '',
         scopes: ['public_profile', 'email'],
         attributeMapping: {
           email: ProviderAttribute.FACEBOOK_EMAIL,
@@ -108,16 +108,16 @@ export default class CognitoStack extends sst.Stack {
       constructId('user-pool-identify-provider-google', props),
       {
         userPool: props.cognitoUserPool,
-        clientId: props
-          .allStagesSecrets!.secretValueFromJson(
-            `${props.stageUpperCase}_GOOGLE_CLIENT_ID`
-          )
-          .toString(),
-        clientSecret: props
-          .allStagesSecrets!.secretValueFromJson(
-            `${props.stageUpperCase}_GOOGLE_CLIENT_SECRET`
-          )
-          .toString(),
+        clientId:
+          props.allStagesSecrets
+            ?.secretValueFromJson(`${props.stageUpperCase}_GOOGLE_CLIENT_ID`)
+            .toString() ?? '',
+        clientSecret:
+          props.allStagesSecrets
+            ?.secretValueFromJson(
+              `${props.stageUpperCase}_GOOGLE_CLIENT_SECRET`
+            )
+            .toString() ?? '',
         scopes: ['email'],
         attributeMapping: {
           email: ProviderAttribute.GOOGLE_EMAIL,
@@ -160,12 +160,12 @@ export default class CognitoStack extends sst.Stack {
     props.cognitoUserPoolClient.node.addDependency(googleProvider)
 
     const auth = new Auth(this, constructId('cognito-authorization', props), {
-      cognito: {
+      cdk: {
         userPool: props.cognitoUserPool,
         userPoolClient: props.cognitoUserPoolClient,
       },
     })
 
-    props.cognitoCfnIdentityPool = auth.cognitoCfnIdentityPool
+    props.cognitoCfnIdentityPool = auth.cdk.cfnIdentityPool
   }
 }

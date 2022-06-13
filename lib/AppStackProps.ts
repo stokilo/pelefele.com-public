@@ -2,12 +2,13 @@ import { UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito'
 import {
   Function,
   ApiGatewayV1Api,
+  ApiGatewayV1ApiAuthorizer,
   Queue,
   StackProps,
   Table,
 } from '@serverless-stack/resources'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
-import * as es from 'aws-cdk-lib/aws-elasticsearch'
+import * as es from 'aws-cdk-lib/aws-opensearchservice'
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
 import * as SSM from 'aws-cdk-lib/aws-ssm'
 import * as cognito from 'aws-cdk-lib/aws-cognito'
@@ -20,7 +21,7 @@ export declare type AppStackProps = StackProps & {
   allStagesSecretName: string
   allStagesSecrets?: SM.ISecret
 
-  restApi?: ApiGatewayV1Api
+  restApi?: ApiGatewayV1Api<Record<string, ApiGatewayV1ApiAuthorizer>>
   restApiEndpointCname: string
   restApiPath: string
   restApiName: string
@@ -42,8 +43,8 @@ export declare type AppStackProps = StackProps & {
 
   bucketConfig: BucketConfig
 
-  vpc?: ec2.Vpc
-  sgForIsolatedSubnet?: ec2.SecurityGroup
+  vpc?: ec2.IVpc
+  sgForIsolatedSubnet?: ec2.ISecurityGroup
   vpnEndpoint?: ec2.ClientVpnEndpoint
 
   dynamoDbTable?: Table

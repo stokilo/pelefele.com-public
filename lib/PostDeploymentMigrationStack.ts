@@ -16,7 +16,7 @@ import { constructId } from './index'
 
 /**
  * Stack to execute state machine responsible for post deployment migrations.
- * Migrations includes: schema changes, data imports, data processing.
+ * Migration includes: schema changes, data imports, data processing.
  * This should not include stack updates, for that use @PostDeploymentUpdateStack step functions.
  */
 export class PostDeploymentMigrationStack extends Stack {
@@ -32,11 +32,13 @@ export class PostDeploymentMigrationStack extends Stack {
     )
 
     const inVpc = {
-      vpc: props.vpc!,
+      vpc: props.vpc,
       vpcSubnets: {
         subnetType: SubnetType.PRIVATE_ISOLATED,
       },
-      securityGroups: [props.sgForIsolatedSubnet!],
+      securityGroups: props.sgForIsolatedSubnet
+        ? [props.sgForIsolatedSubnet]
+        : [],
     }
 
     const handlerFunction = new Function(
@@ -46,12 +48,12 @@ export class PostDeploymentMigrationStack extends Stack {
         enableLiveDev: false,
         handler: 'src/step/post-deployment-migration.handler',
         ...inVpc,
-        timeout: Duration.minutes(15),
+        timeout: '15 minutes',
         memorySize: 10240,
         environment: {
           REGION: props.region,
           APP_OUTPUT_PARAMETER_NAME: props.appOutputParameterName,
-          DYNAMODB_TABLE_NAME: props.dynamoDbTable!.dynamodbTable.tableName,
+          DYNAMODB_TABLE_NAME: props.dynamoDbTable?.cdk.table.tableName ?? '',
           APP_BUCKET_NAME: props.isDev
             ? APP_BUCKET_NAMES.DEV_APP_CONFIG
             : props.isLocal
@@ -61,17 +63,19 @@ export class PostDeploymentMigrationStack extends Stack {
         },
       }
     )
-    handlerFunction.attachPermissions([
-      props.dynamoDbTable!,
-      props.bucketConfig.applicationConfigBucket,
-    ])
+    if (props.dynamoDbTable) {
+      handlerFunction.attachPermissions([
+        props.dynamoDbTable,
+        props.bucketConfig.applicationConfigBucket,
+      ])
+    }
     handlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: Effect.ALLOW,
         actions: ['es:ESHttp*', 'ssm:GetParameter'],
         resources: [
-          `${props.esDomain?.domainArn!}/*`,
-          props.appOutputParameter?.parameterArn!,
+          `${props.esDomain?.domainArn}/*`,
+          props.appOutputParameter?.parameterArn ?? '',
         ],
       })
     )

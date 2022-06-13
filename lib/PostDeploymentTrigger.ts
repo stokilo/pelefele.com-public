@@ -11,13 +11,17 @@ export class PostDeploymentTrigger extends Stack {
       this,
       constructId('migration-script', props),
       {
-        defaultFunctionProps: {
-          timeout: 20,
-          environment: {
-            MIGRATION_STATE_MACHINE_ARN:
-              props.postDeploymentMigrationStateMachine?.stateMachineArn!,
-            POST_DEPLOYMENT_STATE_MACHINE_ARN:
-              props.postDeploymentUpdateStackStateMachine?.stateMachineArn!,
+        defaults: {
+          function: {
+            timeout: 20,
+            environment: {
+              MIGRATION_STATE_MACHINE_ARN:
+                props.postDeploymentMigrationStateMachine?.stateMachineArn ??
+                '',
+              POST_DEPLOYMENT_STATE_MACHINE_ARN:
+                props.postDeploymentUpdateStackStateMachine?.stateMachineArn ??
+                '',
+            },
           },
         },
         onCreate: 'src/step/post-deployment-trigger.handler',
@@ -30,8 +34,8 @@ export class PostDeploymentTrigger extends Stack {
         actions: ['states:StartExecution'],
         effect: iam.Effect.ALLOW,
         resources: [
-          props.postDeploymentMigrationStateMachine!.stateMachineArn,
-          props.postDeploymentUpdateStackStateMachine!.stateMachineArn,
+          props.postDeploymentMigrationStateMachine?.stateMachineArn ?? '',
+          props.postDeploymentUpdateStackStateMachine?.stateMachineArn ?? '',
         ],
       }),
     ])

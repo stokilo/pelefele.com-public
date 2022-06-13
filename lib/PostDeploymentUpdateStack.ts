@@ -24,11 +24,10 @@ export class PostDeploymentUpdateStack extends Stack {
       }
     )
 
-    const hostedZoneId = props
-      .allStagesSecrets!.secretValueFromJson(
-        `${props.stageUpperCase}_HOSTED_ZONE_ID`
-      )
-      .toString()
+    const hostedZoneId =
+      props.allStagesSecrets
+        ?.secretValueFromJson(`${props.stageUpperCase}_HOSTED_ZONE_ID`)
+        .toString() ?? ''
     const handlerFunction = new Function(
       this,
       constructId('post-deployment-update-lambda', props),

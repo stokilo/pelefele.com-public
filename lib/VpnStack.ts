@@ -18,25 +18,31 @@ export default class VpnStack extends Stack {
       'server-cert-parameter'
     )
 
-    props.vpnEndpoint = new ec2.ClientVpnEndpoint(
-      this,
-      constructId('vpn-endpoint', props),
-      {
-        cidr: '10.17.0.0/22',
-        clientCertificateArn: clientCertToken,
-        serverCertificateArn: serverCertToken,
-        vpc: props.vpc!,
-        splitTunnel: true,
-        logging: false,
-        selfServicePortal: false,
-        dnsServers: ['10.17.0.2'],
-        securityGroups: [props.sgForIsolatedSubnet!],
-        vpcSubnets: {
-          subnetGroupName: constructName('subnet-isolated', props),
-          availabilityZones: [props.vpc!.availabilityZones[0]],
-        },
-      }
-    )
+    if (props.vpc) {
+      props.vpnEndpoint = new ec2.ClientVpnEndpoint(
+        this,
+        constructId('vpn-endpoint', props),
+        {
+          cidr: '10.17.0.0/22',
+          clientCertificateArn: clientCertToken,
+          serverCertificateArn: serverCertToken,
+          vpc: props.vpc,
+          splitTunnel: true,
+          logging: false,
+          selfServicePortal: false,
+          dnsServers: ['10.17.0.2'],
+          securityGroups: props.sgForIsolatedSubnet
+            ? [props.sgForIsolatedSubnet]
+            : [],
+          vpcSubnets: {
+            subnetGroupName: constructName('subnet-isolated', props),
+            availabilityZones: [props.vpc.availabilityZones[0]],
+          },
+        }
+      )
+    } else {
+      throw new Error('VPC not defined')
+    }
 
     // const bastionHost = new ec2.BastionHostLinux(this, 'BastionHostLinux', {
     //   vpc: props.vpc,

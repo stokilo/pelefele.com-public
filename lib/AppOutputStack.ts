@@ -15,13 +15,14 @@ export default class AppOutputStack extends sst.Stack {
       restApiEndpointCname: props.restApiEndpointCname,
       restApiPath: props.restApiPath,
       restApiName: props.restApiName,
-      cognitoUserPoolId: props.cognitoUserPool!.userPoolId,
-      cognitoUserPoolClientId: props.cognitoUserPoolClient!.userPoolClientId,
+      cognitoUserPoolId: props.cognitoUserPool?.userPoolId ?? '',
+      cognitoUserPoolClientId:
+        props.cognitoUserPoolClient?.userPoolClientId.toString() ?? '',
       cognitoDomainPrefix: props.cognitoDomainPrefix,
       cognitoRedirectSignInUrl: props.cognitoRedirectSignInUrl,
       cognitoRedirectSignOutUrl: props.cognitoRedirectSignOutUrl,
-      cognitoIdentityPoolId: props.cognitoCfnIdentityPool!.ref,
-      esDomainEndpoint: props.esDomain!.domainEndpoint,
+      cognitoIdentityPoolId: props.cognitoCfnIdentityPool?.ref ?? '',
+      esDomainEndpoint: props.esDomain?.domainEndpoint ?? '',
       esEndpointCname: props.esEndpointCname,
     }
 
@@ -35,13 +36,13 @@ export default class AppOutputStack extends sst.Stack {
       }
     )
 
-    const arr = [props.dynamoDbListingStreamLambda!, props.restApi!]
+    const arr = [props.dynamoDbListingStreamLambda, props.restApi]
     arr.forEach((construct) => {
-      construct.attachPermissions([
+      construct?.attachPermissions([
         new iam.PolicyStatement({
           actions: ['ssm:GetParameter'],
           effect: iam.Effect.ALLOW,
-          resources: [props.appOutputParameter?.parameterArn!],
+          resources: [props.appOutputParameter?.parameterArn as string],
         }),
       ])
     })

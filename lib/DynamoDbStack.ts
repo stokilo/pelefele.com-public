@@ -1,10 +1,5 @@
 import * as sst from '@serverless-stack/resources'
-import {
-  Function,
-  Queue,
-  Table,
-  TableFieldType,
-} from '@serverless-stack/resources'
+import { Function, Queue, Table } from '@serverless-stack/resources'
 import { Duration, RemovalPolicy } from 'aws-cdk-lib'
 import { SubnetType } from 'aws-cdk-lib/aws-ec2'
 import iam, { Effect } from 'aws-cdk-lib/aws-iam'
@@ -22,7 +17,7 @@ export default class DynamoDbStack extends sst.Stack {
       this,
       constructId('listing-stream-sqs-dlq', props)
     )
-    props.listingStreamDQL.sqsQueue
+    props.listingStreamDQL.cdk.queue
       .metricApproximateNumberOfMessagesVisible({
         period: Duration.minutes(5),
       })
@@ -34,19 +29,23 @@ export default class DynamoDbStack extends sst.Stack {
       })
 
     const inVpc = {
-      vpc: scope.local ? undefined : props.vpc!,
+      vpc: scope.local ? undefined : props.vpc,
       vpcSubnets: scope.local
         ? undefined
         : {
             subnetType: SubnetType.PRIVATE_ISOLATED,
           },
-      securityGroups: scope.local ? undefined : [props.sgForIsolatedSubnet!],
+      securityGroups: scope.local
+        ? undefined
+        : props.sgForIsolatedSubnet
+        ? [props.sgForIsolatedSubnet]
+        : undefined,
     }
 
     props.dynamoDbTable = new Table(this, 'main-table', {
       fields: {
-        pk: TableFieldType.STRING,
-        sk: TableFieldType.STRING,
+        pk: 'string',
+        sk: 'string',
       },
       primaryIndex: {
         partitionKey: 'pk',
@@ -81,7 +80,7 @@ export default class DynamoDbStack extends sst.Stack {
         ...inVpc,
         timeout: 5,
         environment: {
-          DYNAMODB_TABLE_NAME: props.dynamoDbTable!.cdk.table.tableName,
+          DYNAMODB_TABLE_NAME: props.dynamoDbTable?.cdk.table.tableName,
           APP_OUTPUT_PARAMETER_NAME: props.appOutputParameterName,
           REGION: props.region,
           STAGE: props.stage,
@@ -96,8 +95,8 @@ export default class DynamoDbStack extends sst.Stack {
         effect: Effect.ALLOW,
         actions: ['es:ESHttp*', 'sqs:SendMessage'],
         resources: [
-          `${props.esDomain?.domainArn!}/*`,
-          props.listingStreamDQL.sqsQueue.queueArn,
+          `${props.esDomain?.domainArn}/*`,
+          props.listingStreamDQL.cdk.queue.queueArn,
         ],
       })
     )
@@ -105,11 +104,13 @@ export default class DynamoDbStack extends sst.Stack {
 
     props.dynamoDbTable.addConsumers(this, {
       esConsumer: {
-        consumerProps: {
-          startingPosition: StartingPosition.TRIM_HORIZON,
-          onFailure: new SqsDlq(props.listingStreamDQL.sqsQueue),
-          retryAttempts: 2,
-          bisectBatchOnError: true,
+        cdk: {
+          eventSource: {
+            startingPosition: StartingPosition.TRIM_HORIZON,
+            onFailure: new SqsDlq(props.listingStreamDQL.cdk.queue),
+            retryAttempts: 2,
+            bisectBatchOnError: true,
+          },
         },
         function: props.dynamoDbListingStreamLambda,
       },

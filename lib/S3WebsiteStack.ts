@@ -13,6 +13,7 @@ import {
   Source,
   StorageClass,
 } from 'aws-cdk-lib/aws-s3-deployment'
+import { RetentionDays } from 'aws-cdk-lib/aws-logs'
 
 export default class S3WebsiteStack extends Stack {
   constructor(scope: App, id: string, props: AppStackProps) {
@@ -56,16 +57,18 @@ export default class S3WebsiteStack extends Stack {
     props: AppStackProps
   ) {
     const sBucket = new SBucket(this, constructId('s3-assets-bucket', props), {
-      s3Bucket: {
-        bucketName,
-        publicReadAccess: true,
-        websiteIndexDocument: 'index.html',
-        websiteErrorDocument: 'index.html',
-        removalPolicy: RemovalPolicy.DESTROY,
-        autoDeleteObjects: true,
+      cdk: {
+        bucket: {
+          bucketName,
+          publicReadAccess: true,
+          websiteIndexDocument: 'index.html',
+          websiteErrorDocument: 'index.html',
+          removalPolicy: RemovalPolicy.DESTROY,
+          autoDeleteObjects: true,
+        },
       },
     })
-    sBucket.s3Bucket.addToResourcePolicy(
+    sBucket.cdk.bucket.addToResourcePolicy(
       this.getCloudflareAccessOnlyPolicy(bucketName, props)
     )
 
@@ -74,7 +77,7 @@ export default class S3WebsiteStack extends Stack {
       constructId('s3-assets-bucket-deployment', props),
       {
         sources: [Source.asset('./lib/data/assets/')],
-        destinationBucket: sBucket.s3Bucket,
+        destinationBucket: sBucket.cdk.bucket,
         retainOnDelete: false,
         prune: true,
         storageClass: StorageClass.STANDARD,
@@ -93,42 +96,47 @@ export default class S3WebsiteStack extends Stack {
     assetsBucket: SBucket
   ) {
     const sBucket = new SBucket(this, constructId('s3-upload-bucket', props), {
-      s3Bucket: {
-        bucketName,
-        publicReadAccess: false,
-        removalPolicy: RemovalPolicy.DESTROY,
-        autoDeleteObjects: true,
-        cors: [
-          {
-            allowedMethods: [HttpMethods.POST, HttpMethods.PUT],
-            allowedOrigins: ['*'],
-            allowedHeaders: ['*'],
-          },
-        ],
+      cdk: {
+        bucket: {
+          bucketName,
+          publicReadAccess: false,
+          removalPolicy: RemovalPolicy.DESTROY,
+          autoDeleteObjects: true,
+          cors: [
+            {
+              allowedMethods: [HttpMethods.POST, HttpMethods.PUT],
+              allowedOrigins: ['*'],
+              allowedHeaders: ['*'],
+            },
+          ],
+        },
       },
     })
 
     props.bucketConfig.imgUploadBucket = sBucket
 
-    sBucket.addNotifications(this, [
-      {
-        handler: 'src/rest/events/s3upload.handler',
-        bundle: {
-          externalModules: ['sharp'],
+    sBucket.addNotifications(this, {
+      'upload-notification': {
+        function: {
+          handler: 'src/event/s3upload.handler',
+          bundle: {
+            externalModules: ['sharp'],
+          },
+          layers: [
+            new lambda.LayerVersion(
+              this,
+              constructId('node-module-sharp-lambda-layer', props),
+              {
+                code: lambda.Code.fromAsset('layers/sharp'),
+              }
+            ),
+          ],
+          permissions: [sBucket, assetsBucket],
+          memorySize: 1024,
+          logRetention: RetentionDays.ONE_DAY,
         },
-        layers: [
-          new lambda.LayerVersion(
-            this,
-            constructId('node-module-sharp-lambda-layer', props),
-            {
-              code: lambda.Code.fromAsset('layers/sharp'),
-            }
-          ),
-        ],
-        permissions: [sBucket, assetsBucket],
-        memorySize: 1024,
       },
-    ])
+    })
   }
 
   /**

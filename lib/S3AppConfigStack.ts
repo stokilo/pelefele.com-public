@@ -25,12 +25,14 @@ export default class S3AppConfigStack extends Stack {
       this,
       constructId('app-config-bucket', props),
       {
-        s3Bucket: {
-          bucketName,
-          publicReadAccess: false,
-          blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-          removalPolicy: RemovalPolicy.DESTROY,
-          autoDeleteObjects: true,
+        cdk: {
+          bucket: {
+            bucketName,
+            publicReadAccess: false,
+            blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+            removalPolicy: RemovalPolicy.DESTROY,
+            autoDeleteObjects: true,
+          },
         },
       }
     )
@@ -40,7 +42,7 @@ export default class S3AppConfigStack extends Stack {
       constructId('app-config-bucket-deployment', props),
       {
         sources: [Source.asset('./lib/data/')],
-        destinationBucket: sstConfigBucket.s3Bucket,
+        destinationBucket: sstConfigBucket.cdk.bucket,
         retainOnDelete: false,
         prune: true,
         storageClass: StorageClass.STANDARD,
