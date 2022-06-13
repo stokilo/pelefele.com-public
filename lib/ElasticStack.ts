@@ -41,9 +41,9 @@ export default class ElasticStack extends Stack {
       },
       capacity: {
         masterNodes: 3,
-        masterNodeInstanceType: 't3.small.elasticsearch',
+        masterNodeInstanceType: 't3.small.search',
         dataNodes: 2,
-        dataNodeInstanceType: 't3.small.elasticsearch',
+        dataNodeInstanceType: 't3.small.search',
       },
       accessPolicies: [domainAccessPolicy],
     }

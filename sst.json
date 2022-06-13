@@ -1,6 +1,6 @@
 {
   "name": "pelefele",
-  "region": "me-south-1",
+  "region": "ap-south-1",
   "lint": false,
   "typeCheck": true
 }
