@@ -1,9 +1,5 @@
 import * as sst from '@serverless-stack/resources'
-import {
-  Authorizer,
-  Cors,
-  MethodLoggingLevel,
-} from 'aws-cdk-lib/aws-apigateway'
+import { Cors, MethodLoggingLevel } from 'aws-cdk-lib/aws-apigateway'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import { SubnetType } from 'aws-cdk-lib/aws-ec2'
 import { ROUTES } from 'shared/routes'

@@ -1,6 +1,6 @@
 import { UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito'
 import {
-  Function,
+  Function as Fn,
   ApiGatewayV1Api,
   ApiGatewayV1ApiAuthorizer,
   Queue,
@@ -63,5 +63,5 @@ export declare type AppStackProps = StackProps & {
   postDeploymentMigrationStateMachine?: sfn.StateMachine
   postDeploymentUpdateStackStateMachine?: sfn.StateMachine
 
-  dynamoDbListingStreamLambda?: Function
+  dynamoDbListingStreamLambda?: Fn
 }
