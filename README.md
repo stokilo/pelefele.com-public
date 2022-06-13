@@ -64,10 +64,11 @@ LOCAL_HOSTED_ZONE_ID	2319239032j23OGQIKMIR
 
 ```
 
+2. Extract node module sharp under layers/sharp folder.
 
-2. Check lib/vpn.md to setup OpenVpn connection to the VPC
+3. Check lib/vpn.md to setup OpenVpn connection to the VPC
 
-3. Once connected install awscurl and check system status
+4. Once connected install awscurl and check system status
 
 ```
 awscurl --service execute-api https://dev.api.awss.ws/v1/admin/panel\?action\=status --region me-south-1
