@@ -52,9 +52,9 @@ export function constructId(
 export default async function main(app: sst.App): Promise<void> {
   const appName = 'pelefele'
   const domainStagePrefix = `${app.stage}.`
-  const hostedZoneName = 'awss.ws'
+  const hostedZoneName = 'aws-rest-api.com'
   const allStagesSecretName = `all-stages/${appName}`
-  const restApiEndpointCname = `${domainStagePrefix}api.awss.ws`
+  const restApiEndpointCname = `${domainStagePrefix}api.aws-rest-api.com`
   const restApiPath = 'v1'
   const restApiName = 'api.pelefele.com'
 
@@ -70,7 +70,7 @@ export default async function main(app: sst.App): Promise<void> {
     ? cognitoCallbackUrlLocalMode
     : cognitoLogoutUrl
 
-  const esEndpointCname = `${domainStagePrefix}es.awss.ws`
+  const esEndpointCname = `${domainStagePrefix}es.aws-rest-api.com`
   const appOutputParameterName = `/app-output/${appName}/${app.stage}`
 
   const props: AppStackProps = {
@@ -114,8 +114,8 @@ export default async function main(app: sst.App): Promise<void> {
     environment: {
       APP_NAME: props.appName,
       REGION: props.region,
-      ES_DOMAIN_HTTP: `http://${props.domainStagePrefix}es.awss.ws`,
-      VPN_DOMAIN: `*.${props.domainStagePrefix}vpn.awss.ws`,
+      ES_DOMAIN_HTTP: `http://${props.domainStagePrefix}es.aws-rest-api.com`,
+      VPN_DOMAIN: `*.${props.domainStagePrefix}vpn.aws-rest-api.com`,
       S3_UPLOAD_BUCKET: props.bucketConfig.getS3UploadBucketName(app.stage),
       S3_IMG_BUCKET: props.bucketConfig.getS3ImgBucketName(app.stage),
     },

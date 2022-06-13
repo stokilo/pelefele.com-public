@@ -2,7 +2,7 @@
 
 Edit a shell script template for OpenVpn.
 
-Replace vpn.awss.ws with your vpn domain name. Add to Route 53 CNAME *.vpn.awss.ws pointing to the DNS of Vpn endpoint.
+Replace vpn.aws-rest-api.com with your vpn domain name. Add to Route 53 CNAME *.vpn.aws-rest-api.com pointing to the DNS of Vpn endpoint.
 
 ```
 template.ovpn 
@@ -21,7 +21,7 @@ Deploy a CDK VPN stack.
 Go to Route53 hosted zone for domain and add CNAME like that
 
 ```
-*.vpn.awss.ws *. *.cvpn-endpoint-0857299999999abee.prod.clientvpn.me-south-1.amazonaws.com
+*.vpn.aws-rest-api.com *. *.cvpn-endpoint-0857299999999abee.prod.clientvpn.me-south-1.amazonaws.com
 ```
 
 Open aws.ovpn with amazon VPN client or OpenVpn client.
