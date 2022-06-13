@@ -46,6 +46,8 @@ export default class DynamoDbStack extends sst.Stack {
       fields: {
         pk: 'string',
         sk: 'string',
+        gsi1pk: 'string',
+        gsi1sk: 'string',
       },
       primaryIndex: {
         partitionKey: 'pk',

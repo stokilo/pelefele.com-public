@@ -45,3 +45,5 @@ amplifytools.xcconfig
 /coverage/
 /lib/doc/aws.ovpn
 /.sst/stage
+/layers/
+/.sst/
