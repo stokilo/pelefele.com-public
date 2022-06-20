@@ -30,7 +30,7 @@ export default class VpnStack extends Stack {
           splitTunnel: true,
           logging: false,
           selfServicePortal: false,
-          dnsServers: ['10.17.0.2'],
+          dnsServers: ['10.17.0.2', '8.8.8.8'],
           securityGroups: props.sgForIsolatedSubnet
             ? [props.sgForIsolatedSubnet]
             : [],
