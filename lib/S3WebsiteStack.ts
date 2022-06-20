@@ -117,7 +117,7 @@ export default class S3WebsiteStack extends Stack {
     sBucket.addNotifications(this, {
       'upload-notification': {
         function: {
-          handler: 'src/event/s3upload.handler',
+          handler: 'src/rest/events/s3upload.handler',
           bundle: {
             externalModules: ['sharp'],
           },
