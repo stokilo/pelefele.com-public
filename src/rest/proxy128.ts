@@ -6,7 +6,6 @@ import { toRequestContext } from 'common/request-context'
 import { ListingSchema } from 'shared/listing/listing'
 import { ListingService } from 'service/listing-service'
 import { isRoute, ROUTE_NAMES } from 'shared/routes'
-import { HttpMethods } from '@aws-cdk/aws-s3'
 
 const s3Service = new S3Service()
 const listingService = new ListingService()
@@ -24,7 +23,7 @@ export const handler: APIGatewayProxyHandler = async (
   let resultObj = {}
   try {
     const requestContext = toRequestContext(event)
-    if (event.requestContext.httpMethod === HttpMethods.POST) {
+    if (event.requestContext.httpMethod === 'POST') {
       if (event.body) {
         if (isRoute(event, ROUTE_NAMES.LISTINGS)) {
           resultObj = await listingService.onListingSave(
@@ -33,7 +32,7 @@ export const handler: APIGatewayProxyHandler = async (
           )
         }
       }
-    } else if (event.requestContext.httpMethod === HttpMethods.GET) {
+    } else if (event.requestContext.httpMethod === 'GET') {
       if (isRoute(event, ROUTE_NAMES.S3_SIGNED_URLS)) {
         resultObj = await s3Service.generatePreSignedUrl(event, requestContext)
       } else if (isRoute(event, ROUTE_NAMES.LISTINGS)) {
