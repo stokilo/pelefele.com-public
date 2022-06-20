@@ -53,7 +53,7 @@ export class PostDeploymentMigrationStack extends Stack {
         environment: {
           REGION: props.region,
           APP_OUTPUT_PARAMETER_NAME: props.appOutputParameterName,
-          DYNAMODB_TABLE_NAME: props.dynamoDbTable?.cdk.table.tableName ?? '',
+          DYNAMODB_TABLE_NAME: props.dynamoDbTable? props.dynamoDbTable.tableName : '',
           APP_BUCKET_NAME: props.isDev
             ? APP_BUCKET_NAMES.DEV_APP_CONFIG
             : props.isLocal

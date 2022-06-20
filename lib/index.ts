@@ -107,9 +107,6 @@ export default async function main(app: sst.App): Promise<void> {
   app.setDefaultFunctionProps({
     runtime: 'nodejs14.x',
     logRetention: RetentionDays.ONE_DAY,
-  })
-
-  app.setDefaultFunctionProps({
     memorySize: 128,
     environment: {
       APP_NAME: props.appName,

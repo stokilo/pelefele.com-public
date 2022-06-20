@@ -17,6 +17,7 @@ export default class DynamoDbStack extends sst.Stack {
       this,
       constructId('listing-stream-sqs-dlq', props)
     )
+
     props.listingStreamDQL.cdk.queue
       .metricApproximateNumberOfMessagesVisible({
         period: Duration.minutes(5),
@@ -82,7 +83,7 @@ export default class DynamoDbStack extends sst.Stack {
         ...inVpc,
         timeout: 5,
         environment: {
-          DYNAMODB_TABLE_NAME: props.dynamoDbTable?.cdk.table.tableName,
+          DYNAMODB_TABLE_NAME: props.dynamoDbTable?.tableName,
           APP_OUTPUT_PARAMETER_NAME: props.appOutputParameterName,
           REGION: props.region,
           STAGE: props.stage,
@@ -98,7 +99,7 @@ export default class DynamoDbStack extends sst.Stack {
         actions: ['es:ESHttp*', 'sqs:SendMessage'],
         resources: [
           `${props.esDomain?.domainArn}/*`,
-          props.listingStreamDQL.cdk.queue.queueArn,
+          props.listingStreamDQL.queueArn,
         ],
       })
     )

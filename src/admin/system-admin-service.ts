@@ -35,7 +35,7 @@ export class SystemAdminService {
    * Fetch system information data from dynamodb and execute next migrations in the line.
    * @return true in case there is more migrations pending
    */
-  async migrateNext(dryRun: boolean = false): Promise<boolean> {
+  async migrateNext(dryRun = false): Promise<boolean> {
     const systemInformation = await this.getSystemInformation()
     const nextMigrationNumber = +systemInformation.lastMigrationNumber + 1
 

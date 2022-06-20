@@ -53,6 +53,35 @@ export default class RestApi extends sst.Stack {
       defaults: {
         // @ts-ignore
         authorizer: 'Authorizer',
+        function: {
+          environment: {
+            DYNAMODB_TABLE_NAME: props.dynamoDbTable
+              ? props.dynamoDbTable.tableName
+              : '',
+            LISTING_SQS_DLQ_URL: props.listingStreamDQL
+              ? props.listingStreamDQL.queueUrl
+              : '',
+            APP_OUTPUT_PARAMETER_NAME: props.appOutputParameterName,
+            AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+            REGION: props.region,
+            STAGE: props.stage,
+            APP_BUCKET_NAME: props.isDev
+              ? APP_BUCKET_NAMES.DEV_APP_CONFIG
+              : props.isLocal
+              ? APP_BUCKET_NAMES.LOCAL_APP_CONFIG
+              : APP_BUCKET_NAMES.PROD_APP_CONFIG,
+            IMG_UPLOAD_BUCKET_NAME: props.isDev
+              ? APP_BUCKET_NAMES.DEV_UPLOAD_BUCKET
+              : props.isLocal
+              ? APP_BUCKET_NAMES.LOCAL_UPLOAD_BUCKET
+              : APP_BUCKET_NAMES.PROD_UPLOAD_BUCKET,
+            IMG_BUCKET_NAME: props.isDev
+              ? APP_BUCKET_NAMES.DEV_ASSETS_BUCKET
+              : props.isLocal
+              ? APP_BUCKET_NAMES.LOCAL_ASSETS_BUCKET
+              : APP_BUCKET_NAMES.PROD_ASSETS_BUCKET,
+          },
+        },
       },
       restApi: {
         defaultCorsPreflightOptions: {
@@ -78,9 +107,6 @@ export default class RestApi extends sst.Stack {
       routes: {
         // route for associations only like VPC, it makes sure that CDK won't drop exports and recreate stacks
         [ROUTES.GET_ADMIN_DUMMY]: {
-          // methodOptions: {
-          //   authorizationType: AuthorizationType.IAM,
-          // },
           authorizer: 'iam',
           function: {
             handler: 'src/rest/admin/dummy.handler',
@@ -94,9 +120,6 @@ export default class RestApi extends sst.Stack {
           },
         },
         [ROUTES.GET_ADMIN_PANEL]: {
-          // methodOptions: {
-          //   authorizationType: AuthorizationType.IAM,
-          // },
           authorizer: 'iam',
           function: {
             handler: 'src/rest/admin/admin-panel.handler',
@@ -114,31 +137,6 @@ export default class RestApi extends sst.Stack {
             handler: 'src/rest/es-search.handler',
             ...inVpc,
           },
-        },
-      },
-      defaultFunctionProps: {
-        environment: {
-          DYNAMODB_TABLE_NAME: props.dynamoDbTable?.cdk.table.tableName,
-          LISTING_SQS_DLQ_URL: props.listingStreamDQL?.cdk.queue.queueUrl,
-          APP_OUTPUT_PARAMETER_NAME: props.appOutputParameterName,
-          AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-          REGION: props.region,
-          STAGE: props.stage,
-          APP_BUCKET_NAME: props.isDev
-            ? APP_BUCKET_NAMES.DEV_APP_CONFIG
-            : props.isLocal
-            ? APP_BUCKET_NAMES.LOCAL_APP_CONFIG
-            : APP_BUCKET_NAMES.PROD_APP_CONFIG,
-          IMG_UPLOAD_BUCKET_NAME: props.isDev
-            ? APP_BUCKET_NAMES.DEV_UPLOAD_BUCKET
-            : props.isLocal
-            ? APP_BUCKET_NAMES.LOCAL_UPLOAD_BUCKET
-            : APP_BUCKET_NAMES.PROD_UPLOAD_BUCKET,
-          IMG_BUCKET_NAME: props.isDev
-            ? APP_BUCKET_NAMES.DEV_ASSETS_BUCKET
-            : props.isLocal
-            ? APP_BUCKET_NAMES.LOCAL_ASSETS_BUCKET
-            : APP_BUCKET_NAMES.PROD_ASSETS_BUCKET,
         },
       },
       customDomain: {
@@ -198,7 +196,7 @@ export default class RestApi extends sst.Stack {
         effect: iam.Effect.ALLOW,
         resources: [
           `${props.esDomain?.domainArn}/*`,
-          props.listingStreamDQL?.cdk.queue.queueArn as string,
+          props.listingStreamDQL?.queueArn as string,
           `arn:aws:ssm:${props.region}:${props.account}:parameter/app-output/*`,
         ],
       }),

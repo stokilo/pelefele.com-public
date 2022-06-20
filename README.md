@@ -71,12 +71,12 @@ LOCAL_HOSTED_ZONE_ID	2319239032j23OGQIKMIR
 4. Once connected install awscurl and check system status
 
 ```
-awscurl --service execute-api https://dev.api.awss.ws/v1/admin/panel\?action\=status --region me-south-1
+awscurl --service execute-api https://local.api.aws-rest-api.com/v1/admin/panel\?action\=status --region ap-south-1
 ```
 
 Dry run migration 0.0.1 number 2
 ```
-awscurl --service execute-api https://dev.api.awss.ws/v1/admin/panel\?action\=migrate  --region me-south-1
+awscurl --service execute-api https://local.api.aws-rest-api.com/v1/admin/panel\?action\=migrate  --region ap-south-1
 ```
 
 #### Build
