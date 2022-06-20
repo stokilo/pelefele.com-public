@@ -83,25 +83,27 @@ export default class RestApi extends sst.Stack {
           },
         },
       },
-      restApi: {
-        defaultCorsPreflightOptions: {
-          allowMethods: Cors.ALL_METHODS,
-          allowOrigins: [
-            'http://localhost:3000',
-            'https://dev.pelefele.com',
-            'https://pelefele.com',
-          ],
-          allowHeaders: [...Cors.DEFAULT_HEADERS, 'x-language'],
-        },
-        deployOptions: {
-          methodOptions: {
-            '/*/*': {
-              throttlingRateLimit: props.isProd ? 100 : 5,
-              throttlingBurstLimit: props.isProd ? 20 : 4,
-            },
+      cdk: {
+        restApi: {
+          defaultCorsPreflightOptions: {
+            allowMethods: Cors.ALL_METHODS,
+            allowOrigins: [
+              'http://localhost:3000',
+              'https://dev.pelefele.com',
+              'https://pelefele.com',
+            ],
+            allowHeaders: [...Cors.DEFAULT_HEADERS, 'x-language'],
           },
-          tracingEnabled: false,
-          loggingLevel: MethodLoggingLevel.OFF,
+          deployOptions: {
+            methodOptions: {
+              '/*/*': {
+                throttlingRateLimit: props.isProd ? 100 : 5,
+                throttlingBurstLimit: props.isProd ? 20 : 4,
+              },
+            },
+            tracingEnabled: false,
+            loggingLevel: MethodLoggingLevel.OFF,
+          },
         },
       },
       routes: {
