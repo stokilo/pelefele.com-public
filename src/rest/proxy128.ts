@@ -13,7 +13,7 @@ const listingService = new ListingService()
 /**
  * This is a proxy lambda for accessing for low resource config (128MB memory).
  * In order to save deployment time and resources we share lambda with similar memory/cpu requirements.
- * These lambdas requires an authenticated user.
+ * These lambdas require an authenticated user.
  * @param event
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
